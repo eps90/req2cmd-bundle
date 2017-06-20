@@ -1,0 +1,13 @@
+{
+    "name": "eps90/request-to-command-bus-bundle",
+    "description": "Converts HTTP request to command and sends to the command bus",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kuba Turek",
+            "email": "ja@kubaturek.pl"
+        }
+    ],
+    "require": {}
+}
