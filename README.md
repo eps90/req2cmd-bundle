@@ -1,10 +1,10 @@
 # Request2CommandBusBundle
 Converts Symfony HTTP request to command and sends to the command bus
 
-[![Build Status](https://travis-ci.org/eps90/request-to-command-bus-bundle.svg?branch=master)](https://travis-ci.org/eps90/request-to-command-bus-bundle)
-[![Coverage Status](https://coveralls.io/repos/github/eps90/request-to-command-bus-bundle/badge.svg?branch=master)](https://coveralls.io/github/eps90/request-to-command-bus-bundle?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/eps90/request-to-command-bus-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/eps90/request-to-command-bus-bundle/?branch=master)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6e6b361b00a145168f3ebfbc06c7ca08)](https://www.codacy.com/app/eps90/request-to-command-bus-bundle?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=eps90/request-to-command-bus-bundle&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.org/eps90/req2cmd-bundle.svg?branch=master)](https://travis-ci.org/eps90/req2cmd-bundle)
+[![Coverage Status](https://coveralls.io/repos/github/eps90/req2cmd-bundle/badge.svg?branch=master)](https://coveralls.io/github/eps90/req2cmd-bundle?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/eps90/req2cmd-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/eps90/req2cmd-bundle/?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/413e7b41b7874d818266ac668f4edd92)](https://www.codacy.com/app/eps90/req2cmd-bundle?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=eps90/req2cmd-bundle&amp;utm_campaign=Badge_Grade)
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/ecc340e9-deab-47da-928c-b30c384df654/big.png)](https://insight.sensiolabs.com/projects/ecc340e9-deab-47da-928c-b30c384df654)
 
