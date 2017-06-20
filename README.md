@@ -36,16 +36,146 @@ Every contribution is welcome!
 
 ## Installation
 
-Install the package with following command:
+**Step 1:** Open a command console, enter your project's root director 
+and run following command to install the package with Composer:
 
 ```bash
 composer require [complete package name here] #todo 
 ```
 
-And add a bundle to your `AppKernel`: (todo)
+**Step 2:** Enable the bundle by adding it to the list of registered bundles
+in the `app/AppKernel.php` file:
 
-## Usage (todo)
+```php
+<?php
 
-## Testing (todo)
+// ...
+class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
+        $bundles = [
+            // ...
+            new Eps\Req2CmdBundle\Req2CmdBundle(),
+            // ...
+        ];
+        
+        // ...
+    }
+    
+    // ...
+}
+```
 
-## Things to do in the nearest future
+## Usage
+
+(Documentation in progress)
+
+### Converting a route to a command
+This bundle uses the capabilities of [Symfony Router](https://symfony.com/doc/current/routing.html)
+to match a route with configure command. In the happy path, all you need to do is to set
+a `_command_class` parameter in your route:
+
+```yml
+app.add_post:
+  path: /add_post.{_format}
+  methods: ['POST']
+  defaults:
+    _command_class: AppBundle\Command\AddPostCommand
+    _format: ~
+```
+
+In such case, an event listener will try to convert a request contents to a command instance
+with `CommandExtractor` (currently the default extractor is the Symfony Serializer).
+The result command instance will be saved as `_command` argument in the request.
+
+```php
+<?php
+
+// ...
+
+class PostController
+{
+    // ...
+    public function addPostAction(Request $request)
+    {
+        // ...
+        $command = $request->attributes->get('_command');
+        // ...
+    }
+}
+```
+
+### Action!
+
+If you won't add a `_controller` parameter to the route, your request will be automatically sent
+to `ApiResponderAction` which is responsible for extracting a command from a request and sending it to the command bus.
+Moreover, regarding the method the request has been send with, it responds with proper status code.
+For example, for successful `POST` request you can expect 201 status code (201: Created).
+
+### Custom controller
+
+Of course, you can use your own controller, with standard parameter, `_controller`.
+The listener from this bundle won't override this param if it's alreade defined.
+
+### Deserialize a command
+
+Probably you won't need this but if your command is complex and uses custom nested types, default Symfony Serializer
+won't have no clue how to deserialize a request to your command.
+
+This bundle comes with denormalizer which looks up for `DeserializableCommandInterface` implementations
+and calls a named constructor on it.
+
+The only requirement is to provide (somehow) a requested format before this listener is fired.
+This can be done wih already available bundles. I hope it'll be available soon here as well.
+
+```php
+<?php
+
+use Eps\Req2CmdBundle\Command\DeserializableCommandInterface;
+
+final class AddPost implements DeserializableCommandInterface
+{
+    // ...
+    
+    public function __construct(PostId $postId, PostContents $contents) 
+    {
+        $this->postId = $postId;
+        $this->contents = $contents;
+    }
+    
+    // ... getters
+    
+    public static function fromArray(array $commandProps): self 
+    {
+        return new self(
+            new PostId($commandProps['id']),
+            new PostContents(
+                $commandProps['title'],
+                $commandProps['author'],
+                $commandProps['contents']
+            )
+         );
+    }
+}
+```
+
+Then your command can seamlessly be deserialize with a `CommandExtractor`.
+Feel free to register your own denormalizer.
+
+### But I want to use different serializer!
+
+Currently it's not possible, but I'll hope it'll get fixed soon.
+Code is ready for other `CommandExtractors` but the service mappings aren't.
+
+### ... and I want other command bus as well!
+
+It'll be available soon as well, stay tuned.
+
+## Testing and contributing
+
+This project is covered with PHPUnit tests. To run them, type:
+
+```bash
+bin/phpunit
+```
