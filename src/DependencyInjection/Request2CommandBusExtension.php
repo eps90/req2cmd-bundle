@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Eps\Request2CommandBusBundle\DependencyInjection;
+namespace Eps\Req2CmdBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

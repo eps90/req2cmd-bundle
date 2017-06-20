@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Eps\Request2CommandBusBundle\Command;
+namespace Eps\Req2CmdBundle\Command;
 
 interface DeserializableCommandInterface
 {

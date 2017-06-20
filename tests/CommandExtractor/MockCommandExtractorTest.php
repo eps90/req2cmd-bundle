@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Eps\Request2CommandBusBundle\Tests\CommandExtractor;
+namespace Eps\Req2CmdBundle\Tests\CommandExtractor;
 
-use Eps\Request2CommandBusBundle\CommandExtractor\MockCommandExtractor;
-use Eps\Request2CommandBusBundle\Tests\Fixtures\Command\DummyCommand;
+use Eps\Req2CmdBundle\CommandExtractor\MockCommandExtractor;
+use Eps\Req2CmdBundle\Tests\Fixtures\Command\DummyCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Eps\Request2CommandBusBundle\Serializer;
+namespace Eps\Req2CmdBundle\Serializer;
 
-use Eps\Request2CommandBusBundle\Command\DeserializableCommandInterface;
+use Eps\Req2CmdBundle\Command\DeserializableCommandInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class DeserializableCommandDenormalizer implements DenormalizerInterface

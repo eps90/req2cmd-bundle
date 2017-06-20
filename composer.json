@@ -11,12 +11,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "Eps\\Request2CommandBusBundle\\": "src/"
+            "Eps\\Req2CmdBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Eps\\Request2CommandBusBundle\\Tests\\": "tests/"
+            "Eps\\Req2CmdBundle\\Tests\\": "tests/"
         }
     },
     "require": {

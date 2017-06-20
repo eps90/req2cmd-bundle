@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Eps\Request2CommandBusBundle\CommandExtractor;
+namespace Eps\Req2CmdBundle\CommandExtractor;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;

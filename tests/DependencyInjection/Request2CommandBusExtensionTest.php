@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Eps\Request2CommandBusBundle\Tests\DependencyInjection;
+namespace Eps\Req2CmdBundle\Tests\DependencyInjection;
 
-use Eps\Request2CommandBusBundle\Action\ApiResponderAction;
-use Eps\Request2CommandBusBundle\DependencyInjection\Request2CommandBusExtension;
-use Eps\Request2CommandBusBundle\EventListener\ExtractCommandFromRequestListener;
+use Eps\Req2CmdBundle\Action\ApiResponderAction;
+use Eps\Req2CmdBundle\DependencyInjection\Request2CommandBusExtension;
+use Eps\Req2CmdBundle\EventListener\ExtractCommandFromRequestListener;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 
 class Request2CommandBusExtensionTest extends AbstractExtensionTestCase

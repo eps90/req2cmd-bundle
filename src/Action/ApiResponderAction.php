@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Eps\Request2CommandBusBundle\Action;
+namespace Eps\Req2CmdBundle\Action;
 
 use League\Tactician\CommandBus;
 use Symfony\Component\HttpFoundation\Request;

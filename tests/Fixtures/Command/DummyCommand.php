@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Eps\Request2CommandBusBundle\Tests\Fixtures\Command;
+namespace Eps\Req2CmdBundle\Tests\Fixtures\Command;
 
 final class DummyCommand
 {

@@ -6,7 +6,7 @@
 
     <services>
         <service id="eps.req2cmd.extractor.serializer"
-                 class="Eps\Request2CommandBusBundle\CommandExtractor\SerializerCommandExtractor"
+                 class="Eps\Req2CmdBundle\CommandExtractor\SerializerCommandExtractor"
                  public="false"
                  lazy="true">
             <argument type="service" id="serializer" />

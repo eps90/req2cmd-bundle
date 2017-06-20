@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Eps\Request2CommandBusBundle\Tests\Action;
+namespace Eps\Req2CmdBundle\Tests\Action;
 
-use Eps\Request2CommandBusBundle\Action\ApiResponderAction;
+use Eps\Req2CmdBundle\Action\ApiResponderAction;
 use League\Tactician\CommandBus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;

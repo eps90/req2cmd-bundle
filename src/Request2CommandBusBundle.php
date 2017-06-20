@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Eps\Request2CommandBusBundle;
+namespace Eps\Req2CmdBundle;
 
-use Eps\Request2CommandBusBundle\DependencyInjection\Request2CommandBusExtension;
+use Eps\Req2CmdBundle\DependencyInjection\Request2CommandBusExtension;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

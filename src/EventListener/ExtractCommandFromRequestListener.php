@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Eps\Request2CommandBusBundle\EventListener;
+namespace Eps\Req2CmdBundle\EventListener;
 
-use Eps\Request2CommandBusBundle\CommandExtractor\CommandExtractorInterface;
+use Eps\Req2CmdBundle\CommandExtractor\CommandExtractorInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class ExtractCommandFromRequestListener

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Eps\Request2CommandBusBundle\Tests\Fixtures\Command;
+namespace Eps\Req2CmdBundle\Tests\Fixtures\Command;
 
-use Eps\Request2CommandBusBundle\Command\DeserializableCommandInterface;
+use Eps\Req2CmdBundle\Command\DeserializableCommandInterface;
 
 final class DummyDeserializableCommand implements DeserializableCommandInterface
 {
