@@ -1,0 +1,13 @@
+language: php
+php:
+  - '7.1'
+  - 'nightly'
+
+before_script:
+  - composer install --no-progress --optimize-autoloader --prefer-dist
+
+script:
+  - bin/phpunit --coverage-clover build/logs/clover.xml # --process-isolation
+
+after_success:
+  - travis_retry php bin/coveralls
