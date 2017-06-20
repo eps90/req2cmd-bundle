@@ -4,18 +4,18 @@ declare(strict_types=1);
 namespace Eps\Req2CmdBundle\Tests\DependencyInjection;
 
 use Eps\Req2CmdBundle\Action\ApiResponderAction;
-use Eps\Req2CmdBundle\DependencyInjection\Request2CommandBusExtension;
+use Eps\Req2CmdBundle\DependencyInjection\Req2CmdExtension;
 use Eps\Req2CmdBundle\EventListener\ExtractCommandFromRequestListener;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 
-class Request2CommandBusExtensionTest extends AbstractExtensionTestCase
+class Req2CmdExtensionTest extends AbstractExtensionTestCase
 {
     /**
      * {@inheritdoc}
      */
     protected function getContainerExtensions(): array
     {
-        return [new Request2CommandBusExtension()];
+        return [new Req2CmdExtension()];
     }
 
     protected function setUp(): void

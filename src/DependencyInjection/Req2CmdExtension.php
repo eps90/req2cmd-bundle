@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-final class Request2CommandBusExtension extends Extension
+final class Req2CmdExtension extends Extension
 {
     /**
      * {@inheritdoc}
