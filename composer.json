@@ -9,6 +9,16 @@
             "email": "ja@kubaturek.pl"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Eps\\Request2CommandBusBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Eps\\Request2CommandBusBundle\\Tests\\": "tests/"
+        }
+    },
     "require": {},
     "require-dev": {
         "phpunit/phpunit": "^6.2",
