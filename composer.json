@@ -20,6 +20,7 @@
         }
     },
     "require": {
+        "php": ">=7.1",
         "symfony/framework-bundle": "~2.3|~3.0",
         "league/tactician-bundle": "^0.4"
     },
