@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Eps\Request2CommandBusBundle\Tests\Fixtures;
+namespace Eps\Request2CommandBusBundle\Tests\Fixtures\Command;
 
 use Eps\Request2CommandBusBundle\Command\DeserializableCommandInterface;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Eps\Request2CommandBusBundle\Tests\CommandExtractor;
 
 use Eps\Request2CommandBusBundle\CommandExtractor\SerializerCommandExtractor;
-use Eps\Request2CommandBusBundle\Tests\Fixtures\DummyCommand;
+use Eps\Request2CommandBusBundle\Tests\Fixtures\Command\DummyCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;

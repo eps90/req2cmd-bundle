@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Eps\Request2CommandBusBundle\Tests\Serializer;
 
 use Eps\Request2CommandBusBundle\Serializer\DeserializableCommandDenormalizer;
-use Eps\Request2CommandBusBundle\Tests\Fixtures\DummyDeserializableCommand;
+use Eps\Request2CommandBusBundle\Tests\Fixtures\Command\DummyDeserializableCommand;
 use PHPUnit\Framework\TestCase;
 
 class DeserializableCommandDenormalizerTest extends TestCase
