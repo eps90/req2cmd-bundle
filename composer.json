@@ -19,7 +19,9 @@
             "Eps\\Request2CommandBusBundle\\Tests\\": "tests/"
         }
     },
-    "require": {},
+    "require": {
+        "symfony/framework-bundle": "~2.3|~3.0"
+    },
     "require-dev": {
         "phpunit/phpunit": "^6.2",
         "satooshi/php-coveralls": "^1.0"
