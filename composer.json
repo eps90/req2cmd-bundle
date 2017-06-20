@@ -1,5 +1,5 @@
 {
-    "name": "eps90/request-to-command-bus-bundle",
+    "name": "eps90/req2cmd-bundle",
     "description": "Converts HTTP request to command and sends to the command bus",
     "type": "library",
     "license": "MIT",
