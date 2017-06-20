@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Eps\Request2CommandBusBundle\Tests\CommandExtractor;
 
 use Eps\Request2CommandBusBundle\CommandExtractor\SerializerCommandExtractor;
+use Eps\Request2CommandBusBundle\Tests\Fixtures\DummyCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -35,20 +36,24 @@ class SerializerCommandExtractorTest extends TestCase
     {
         $commandClass = 'MyClass';
         $requestContent = json_encode([
-            'my' => 'command'
+            'name' => 'My command',
+            'opts' => [
+                'a' => 1,
+                'b' => true
+            ]
         ]);
         $request = new Request([], [], [], [], [], [], $requestContent);
         $requestedFormat = 'json';
         $request->setRequestFormat($requestedFormat);
 
-        $deserializedObj = new \stdClass('deseriazlied_object');
+        $mappedCommand = new DummyCommand('My class', ['a' => 1, 'b' => true]);
         $this->serializer->expects(static::once())
             ->method('deserialize')
             ->with($requestContent, $commandClass, $requestedFormat)
-            ->willReturn($deserializedObj);
+            ->willReturn($mappedCommand);
 
         $actualResult = $this->extractor->extractFromRequest($request, $commandClass);
-        $expectedResult = $deserializedObj;
+        $expectedResult = $mappedCommand;
 
         static::assertEquals($expectedResult, $actualResult);
     }
