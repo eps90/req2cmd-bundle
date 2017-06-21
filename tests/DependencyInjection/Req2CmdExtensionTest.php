@@ -8,7 +8,9 @@ use Eps\Req2CmdBundle\CommandExtractor\JMSSerializerCommandExtractor;
 use Eps\Req2CmdBundle\CommandExtractor\SerializerCommandExtractor;
 use Eps\Req2CmdBundle\DependencyInjection\Req2CmdExtension;
 use Eps\Req2CmdBundle\EventListener\ExtractCommandFromRequestListener;
+use Eps\Req2CmdBundle\Tests\Fixtures\Command\DummyCommand;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Symfony\Component\DependencyInjection\Definition;
 
 class Req2CmdExtensionTest extends AbstractExtensionTestCase
 {
@@ -41,6 +43,24 @@ class Req2CmdExtensionTest extends AbstractExtensionTestCase
             JMSSerializerCommandExtractor::class
         );
         $this->assertContainerBuilderHasAlias('eps.req2cmd.extractor', 'eps.req2cmd.extractor.serializer');
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldSetAliasToDefinedExtractor(): void
+    {
+        $config = [
+            'extractor' => [
+                'service_id' => 'eps.req2cmd.extractor.jms_serializer'
+            ]
+        ];
+        $this->load($config);
+
+        $this->assertContainerBuilderHasAlias(
+            'eps.req2cmd.extractor',
+            'eps.req2cmd.extractor.jms_serializer'
+        );
     }
 
     /**
