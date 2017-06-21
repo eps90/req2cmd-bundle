@@ -28,7 +28,8 @@
         "phpunit/phpunit": "^6.2",
         "satooshi/php-coveralls": "^1.0",
         "symfony/serializer": "~2.3|~3.0",
-        "matthiasnoback/symfony-dependency-injection-test": "^2.1"
+        "matthiasnoback/symfony-dependency-injection-test": "^2.1",
+        "jms/serializer": "^1.7"
     },
     "suggest": {
         "symfony/serializer": "To deserialize commands using Symfony serializer"
