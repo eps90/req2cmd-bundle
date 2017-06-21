@@ -1,5 +1,6 @@
-# Request2CommandBusBundle
-Converts Symfony HTTP request to command and sends to the command bus
+# Req2Cmd Bundle
+
+Extract command from a HTTP request and send it to the [Tactician command bus](http://tactician.thephpleague.com/).  
 
 [![Build Status](https://travis-ci.org/eps90/req2cmd-bundle.svg?branch=master)](https://travis-ci.org/eps90/req2cmd-bundle)
 [![Coverage Status](https://coveralls.io/repos/github/eps90/req2cmd-bundle/badge.svg?branch=master)](https://coveralls.io/github/eps90/req2cmd-bundle?branch=master)
@@ -11,15 +12,15 @@ Converts Symfony HTTP request to command and sends to the command bus
 
 ## Motivation
 
-Recently I've been writing some framework-agnostic project 
-which uses [CQRS](https://martinfowler.com/bliki/CQRS.html) approach.
-With that I can have all use cases in separate classes, written in clean
-and readable way. When I started to integrate it with [Symfony](http://symfony.com) framework,
+Recently I've been writing some project with framework-agnostic code
+with [CQRS](https://martinfowler.com/bliki/CQRS.html) approach 
+so I could have all use cases in separate classes written in clean
+and readable way. When I started to integrate it with [Symfony](http://symfony.com) framework
 I've noticed that each controller's action looks the same: create command from request,
-send to the command bus, return `Response` from action.
+send to the command bus and return `Response` from action.
 
 I've created this library to facilitate converting requests to commands
-and automatically sending them to [Tactician](http://tactician.thephpleague.com/) command bus.
+and automatically sending them to the [Tactician](http://tactician.thephpleague.com/) command bus.
 Thanks to Symfony Router component and Symfony Event Dispatcher with kernel events
 I was able to recognize command from route parameters and convert to the command instance.
 
@@ -40,7 +41,7 @@ Every contribution is welcome!
 and run following command to install the package with Composer:
 
 ```bash
-composer require [complete package name here] #todo 
+composer require eps90/req2cmd-bundle
 ```
 
 **Step 2:** Enable the bundle by adding it to the list of registered bundles
@@ -52,7 +53,7 @@ in the `app/AppKernel.php` file:
 // ...
 class AppKernel extends Kernel
 {
-    public function registerBundles()
+    public function registerBundles(): array
     {
         $bundles = [
             // ...
@@ -94,10 +95,10 @@ The result command instance will be saved as `_command` argument in the request.
 
 // ...
 
-class PostController
+final class PostController
 {
     // ...
-    public function addPostAction(Request $request)
+    public function addPostAction(Request $request): Response
     {
         // ...
         $command = $request->attributes->get('_command');
@@ -105,6 +106,10 @@ class PostController
     }
 }
 ```
+
+The only requirement is to provide a requested format (with `Request::setRequestFormat`) before the `ExtractCommandFromRequestListener` is fired.
+This can be done wih already available bundles, like [FOSRestBundle](https://github.com/FriendsOfSymfony/FOSRestBundle) 
+but I hope that such listener will be available soon in this bundle as well.
 
 ### Action!
 
@@ -115,19 +120,16 @@ For example, for successful `POST` request you can expect 201 status code (201: 
 
 ### Custom controller
 
-Of course, you can use your own controller, with standard parameter, `_controller`.
+Of course, you can use your own controller, with standard `_controller` parameter.
 The listener from this bundle won't override this param if it's alreade defined.
 
 ### Deserialize a command
 
-Probably you won't need this but if your command is complex and uses custom nested types, default Symfony Serializer
-won't have no clue how to deserialize a request to your command.
+If your command is complex and uses some nested types, default Symfony Serializer
+probably won't be able to deserialize a request to your command.
 
-This bundle comes with denormalizer which looks up for `DeserializableCommandInterface` implementations
-and calls a named constructor on it.
-
-The only requirement is to provide (somehow) a requested format before this listener is fired.
-This can be done wih already available bundles. I hope it'll be available soon here as well.
+This bundle comes with a denormalizer which looks up for `DeserializableCommandInterface` implementations
+and calls the `fromArray` constructor on it.
 
 ```php
 <?php
@@ -160,7 +162,7 @@ final class AddPost implements DeserializableCommandInterface
 }
 ```
 
-Then your command can seamlessly be deserialize with a `CommandExtractor`.
+Then your command can seamlessly be deserialized with a `CommandExtractor`.
 Feel free to register your own denormalizer.
 
 ### But I want to use different serializer!
