@@ -64,7 +64,7 @@ class ConfigurationTest extends TestCase
 
     /**
      * @test
-     (*/
+     */
     public function itShouldBeAbleToDefineOwnServiceForExtractor(): void
     {
         $inputConfig = [
