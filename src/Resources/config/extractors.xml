@@ -12,6 +12,13 @@
             <argument type="service" id="serializer" />
         </service>
 
+        <service id="eps.req2cmd.extractor.jms_serializer"
+                 class="Eps\Req2CmdBundle\CommandExtractor\JMSSerializerCommandExtractor"
+                 public="false"
+                 lazy="true">
+            <argument type="service" id="jms_serializer" />
+        </service>
+
         <service id="eps.req2cmd.extractor" alias="eps.req2cmd.extractor.serializer"/>
     </services>
 </container>

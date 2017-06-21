@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Eps\Req2CmdBundle\Tests\DependencyInjection;
 
 use Eps\Req2CmdBundle\Action\ApiResponderAction;
+use Eps\Req2CmdBundle\CommandExtractor\JMSSerializerCommandExtractor;
+use Eps\Req2CmdBundle\CommandExtractor\SerializerCommandExtractor;
 use Eps\Req2CmdBundle\DependencyInjection\Req2CmdExtension;
 use Eps\Req2CmdBundle\EventListener\ExtractCommandFromRequestListener;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
@@ -30,7 +32,14 @@ class Req2CmdExtensionTest extends AbstractExtensionTestCase
      */
     public function itShouldLoadExtractorsDefinitions(): void
     {
-        $this->assertContainerBuilderHasService('eps.req2cmd.extractor.serializer');
+        $this->assertContainerBuilderHasService(
+            'eps.req2cmd.extractor.serializer',
+            SerializerCommandExtractor::class
+        );
+        $this->assertContainerBuilderHasService(
+            'eps.req2cmd.extractor.jms_serializer',
+            JMSSerializerCommandExtractor::class
+        );
         $this->assertContainerBuilderHasAlias('eps.req2cmd.extractor', 'eps.req2cmd.extractor.serializer');
     }
 
