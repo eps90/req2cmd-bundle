@@ -2,6 +2,10 @@
 
 Extract command from a HTTP request and send it to the [Tactician command bus](http://tactician.thephpleague.com/).  
 
+[![Latest Stable Version](https://poser.pugx.org/eps90/req2cmd-bundle/v/stable)](https://packagist.org/packages/eps90/req2cmd-bundle)
+[![Latest Unstable Version](https://poser.pugx.org/eps90/req2cmd-bundle/v/unstable)](https://packagist.org/packages/eps90/req2cmd-bundle)
+[![License](https://poser.pugx.org/eps90/req2cmd-bundle/license)](https://packagist.org/packages/eps90/req2cmd-bundle)
+
 [![Build Status](https://travis-ci.org/eps90/req2cmd-bundle.svg?branch=master)](https://travis-ci.org/eps90/req2cmd-bundle)
 [![Coverage Status](https://coveralls.io/repos/github/eps90/req2cmd-bundle/badge.svg?branch=master)](https://coveralls.io/github/eps90/req2cmd-bundle?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/eps90/req2cmd-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/eps90/req2cmd-bundle/?branch=master)
