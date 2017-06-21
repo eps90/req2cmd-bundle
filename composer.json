@@ -1,6 +1,6 @@
 {
     "name": "eps90/req2cmd-bundle",
-    "description": "Converts HTTP request to command and sends to the command bus",
+    "description": "Extract command from a HTTP request and send it to the Tactician command bus",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
