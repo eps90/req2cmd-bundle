@@ -1,0 +1,4 @@
+Eps\Req2CmdBundle\Tests\Fixtures\Command\DummyId:
+  properties:
+    idValue:
+      type: int

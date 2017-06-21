@@ -1,0 +1,8 @@
+Eps\Req2CmdBundle\Tests\Fixtures\Command\DummyComplexCommand:
+  properties:
+    id:
+      type: Eps\Req2CmdBundle\Tests\Fixtures\Command\DummyId
+    name:
+      type: string
+    date:
+      type: DateTime<'Y-m-d H:i:s'>
