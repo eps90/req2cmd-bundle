@@ -91,7 +91,7 @@ app.add_post:
 ```
 
 In such case, an event listener will try to convert a request contents to a command instance
-with `CommandExtractor` (currently the default extractor is the Symfony Serializer).
+with `CommandExtractor` (the default extractor is the Symfony Serializer).
 The result command instance will be saved as `_command` argument in the request.
 
 ```php
@@ -169,10 +169,75 @@ final class AddPost implements DeserializableCommandInterface
 Then your command can seamlessly be deserialized with a `CommandExtractor`.
 Feel free to register your own denormalizer.
 
-### But I want to use different serializer!
+You can also set a `JMSSerializerCommandExtractor` as your extractor and use handy class mappings for deserialization.
 
-Currently it's not possible, but I'll hope it'll get fixed soon.
-Code is ready for other `CommandExtractors` but the service mappings aren't.
+```yaml
+# src/AppBundle/Resources/config/jms_serializer/Command.AddPost.yml
+AppBundle\Command\AddPost:
+  properties:
+    postId:
+      type: AppBundle\Identity\PostId
+    postContents:
+      type: AppBundle\ValueObject\PostContents
+```
+```yaml
+# app/config.yml
+# ...
+req2cmd:
+  extractor: jms_serializer
+# ...
+```
+
+### But I want to use different extractor!
+
+Sure, why not! 
+You need to create a class implementing the `CommandExtractorInterface` interface. 
+This interface contains only one method, `extractFromRequest`, where you can access a `Request` and a command class.
+For example:
+
+```php
+<?php
+
+use Eps\Req2CmdBundle\CommandExtractor\CommandExtractorInterface;
+// ...
+
+class DummyExtractor implements CommandExtractorInterface
+{
+    public function extractorFromRequest(Request $request, string $commandName)
+    {
+        // get the requested format from the Request object 
+        if ($request->getRequestFormat() === 'json') {
+            // decode contents
+            $contents = json_decode($request->getContents(), true); 
+        }
+        
+        // and return command instance
+        return new $commandName($contents); 
+    }
+}
+```
+
+Then, register this service in service mappings:
+
+```yaml
+services:
+# ...
+  app.extractor.my_extractor: 
+    class: AppBundle\Extractor\DummyExtractor
+```
+
+And adapt project configuration by setting `extractor.service_id` value:
+
+```yaml
+# ...
+req2cmd:
+   extractor:
+      service_id: app.extractor.my_extractor
+# ...
+```
+> **Note:** Defining string value to `req2cmd.extractor` config property
+ is only available for built-in extractors. 
+ For now only `serializer` and `jms_serializer` are allowed.
 
 ### ... and I want other command bus as well!
 
