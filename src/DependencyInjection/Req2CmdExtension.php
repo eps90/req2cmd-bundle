@@ -16,6 +16,9 @@ final class Req2CmdExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
         $loader = new XmlFileLoader(
             $container,
             new FileLocator(__DIR__ . '/../Resources/config')
@@ -24,10 +27,18 @@ final class Req2CmdExtension extends Extension
         $loader->load('actions.xml');
         $loader->load('extractors.xml');
         $loader->load('listeners.xml');
+
+        $this->configureExtractors($config, $container);
     }
 
     public function getAlias(): string
     {
         return 'req2cmd';
+    }
+
+    private function configureExtractors(array $config, ContainerBuilder $container): void
+    {
+        $extractorId = (string)$config['extractor']['service_id'];
+        $container->setAlias('eps.req2cmd.extractor', $extractorId);
     }
 }
