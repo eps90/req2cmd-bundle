@@ -18,9 +18,11 @@ class DeserializableCommandDenormalizer implements DenormalizerInterface
 
     /**
      * {@inheritdoc}
+     * @throws \ReflectionException
      */
     public function supportsDenormalization($data, $type, $format = null): bool
     {
-        return is_subclass_of($type, DeserializableCommandInterface::class);
+        $reflClass = new \ReflectionClass($type);
+        return $reflClass->implementsInterface(DeserializableCommandInterface::class);
     }
 }
