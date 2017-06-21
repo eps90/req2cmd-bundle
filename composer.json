@@ -34,7 +34,7 @@
     },
     "suggest": {
         "symfony/serializer": "To deserialize commands using Symfony serializer",
-        "jms/serializer": "To deserialize commands using JMS Serializer"
+        "jms/serializer-bundle": "To deserialize commands using JMS Serializer"
     },
     "config": {
         "bin-dir": "bin"
