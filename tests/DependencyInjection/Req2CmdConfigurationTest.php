@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Eps\Req2CmdBundle\Tests\DependencyInjection;
 
-use Eps\Req2CmdBundle\DependencyInjection\Configuration;
+use Eps\Req2CmdBundle\DependencyInjection\Req2CmdConfiguration;
 use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-class ConfigurationTest extends TestCase
+class Req2CmdConfigurationTest extends TestCase
 {
     use ConfigurationTestCaseTrait;
 
@@ -17,7 +17,7 @@ class ConfigurationTest extends TestCase
      */
     protected function getConfiguration(): ConfigurationInterface
     {
-        return new Configuration();
+        return new Req2CmdConfiguration();
     }
 
     /**

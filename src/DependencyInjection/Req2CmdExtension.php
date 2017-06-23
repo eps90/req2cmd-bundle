@@ -7,6 +7,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 
 final class Req2CmdExtension extends Extension
 {
@@ -16,7 +17,7 @@ final class Req2CmdExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $configuration = new Configuration();
+        $configuration = new Req2CmdConfiguration();
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new XmlFileLoader(
@@ -27,6 +28,7 @@ final class Req2CmdExtension extends Extension
         $loader->load('actions.xml');
         $loader->load('extractors.xml');
         $loader->load('listeners.xml');
+        $loader->load('param_mappers.xml');
 
         $this->configureExtractors($config, $container);
     }

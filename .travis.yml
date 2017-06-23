@@ -11,3 +11,7 @@ script:
 
 after_success:
   - travis_retry php bin/coveralls
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files

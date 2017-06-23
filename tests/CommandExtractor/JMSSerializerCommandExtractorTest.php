@@ -26,7 +26,7 @@ class JMSSerializerCommandExtractorTest extends TestCase
             ->setDebug(true)
             ->build();
 
-        $this->extractor = new JMSSerializerCommandExtractor($serializer);
+        $this->extractor = new JMSSerializerCommandExtractor($serializer, $serializer);
     }
 
     /**
@@ -49,6 +49,32 @@ class JMSSerializerCommandExtractorTest extends TestCase
             new \DateTime('2015-01-01 12:00:00')
         );
         $actualCommand = $this->extractor->extractFromRequest($request, $commandClass);
+
+        static::assertEquals($expectedCommand, $actualCommand);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldAllowToAppendAdditionalProperties(): void
+    {
+        $commandClass = DummyComplexCommand::class;
+        $requestContent = json_encode([
+            'id' => ['id_value' => 312],
+            'date' => '2015-01-01 12:00:00'
+        ]);
+        $additionalProperties = [
+            'name' => 'MyName'
+        ];
+        $request = new Request([], [], [], [], [], [], $requestContent);
+        $request->setRequestFormat('json');
+
+        $expectedCommand = new DummyComplexCommand(
+            new DummyId(312),
+            'MyName',
+            new \DateTime('2015-01-01 12:00:00')
+        );
+        $actualCommand = $this->extractor->extractFromRequest($request, $commandClass, $additionalProperties);
 
         static::assertEquals($expectedCommand, $actualCommand);
     }

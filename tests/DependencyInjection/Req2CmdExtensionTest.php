@@ -8,9 +8,10 @@ use Eps\Req2CmdBundle\CommandExtractor\JMSSerializerCommandExtractor;
 use Eps\Req2CmdBundle\CommandExtractor\SerializerCommandExtractor;
 use Eps\Req2CmdBundle\DependencyInjection\Req2CmdExtension;
 use Eps\Req2CmdBundle\EventListener\ExtractCommandFromRequestListener;
-use Eps\Req2CmdBundle\Tests\Fixtures\Command\DummyCommand;
+use Eps\Req2CmdBundle\Params\ParamCollector\ParamCollector;
+use Eps\Req2CmdBundle\Params\ParameterMapper\PathParamsMapper;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
-use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 class Req2CmdExtensionTest extends AbstractExtensionTestCase
 {
@@ -87,6 +88,33 @@ class Req2CmdExtensionTest extends AbstractExtensionTestCase
                 'method' => 'onKernelRequest',
                 'event' => 'kernel.request'
             ]
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldHaveMappersDefinitions(): void
+    {
+        $this->assertContainerBuilderHasService(
+            'eps.req2cmd.param_mapper.path',
+            PathParamsMapper::class
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldHaveParamCollectorDefinitions(): void
+    {
+        $defaultCollectorId = 'eps.req2cmd.collector.param_collector';
+        $this->assertContainerBuilderHasService(
+            $defaultCollectorId,
+            ParamCollector::class
+        );
+        $this->assertContainerBuilderHasAlias(
+            'eps.req2cmd.param_collector',
+            $defaultCollectorId
         );
     }
 }

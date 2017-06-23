@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace Eps\Req2CmdBundle\Tests\CommandExtractor;
 
 use Eps\Req2CmdBundle\CommandExtractor\SerializerCommandExtractor;
-use Eps\Req2CmdBundle\Tests\Fixtures\Command\DummyCommand;
+use Eps\Req2CmdBundle\Serializer\DeserializableCommandDenormalizer;
+use Eps\Req2CmdBundle\Tests\Fixtures\Command\DummyDeserializableCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Serializer;
 
 class SerializerCommandExtractorTest extends TestCase
 {
@@ -16,17 +18,16 @@ class SerializerCommandExtractorTest extends TestCase
      */
     private $extractor;
 
-    /**
-     * @var SerializerInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $serializer;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->serializer = $this->createMock(SerializerInterface::class);
-        $this->extractor = new SerializerCommandExtractor($this->serializer);
+        $serializer = new Serializer(
+            [new DeserializableCommandDenormalizer()],
+            [new JsonEncoder()]
+        );
+
+        $this->extractor = new SerializerCommandExtractor($serializer, $serializer, $serializer);
     }
 
     /**
@@ -34,7 +35,7 @@ class SerializerCommandExtractorTest extends TestCase
      */
     public function itShouldDeserializeRequestUsingSerializer(): void
     {
-        $commandClass = 'MyClass';
+        $commandClass = DummyDeserializableCommand::class;
         $requestContent = json_encode([
             'name' => 'My command',
             'opts' => [
@@ -43,17 +44,31 @@ class SerializerCommandExtractorTest extends TestCase
             ]
         ]);
         $request = new Request([], [], [], [], [], [], $requestContent);
-        $requestedFormat = 'json';
-        $request->setRequestFormat($requestedFormat);
+        $request->setRequestFormat('json');
 
-        $mappedCommand = new DummyCommand('My class', ['a' => 1, 'b' => true]);
-        $this->serializer->expects(static::once())
-            ->method('deserialize')
-            ->with($requestContent, $commandClass, $requestedFormat)
-            ->willReturn($mappedCommand);
-
+        $expectedResult = new DummyDeserializableCommand('My command', ['a' => 1, 'b' => true]);
         $actualResult = $this->extractor->extractFromRequest($request, $commandClass);
-        $expectedResult = $mappedCommand;
+
+        static::assertEquals($expectedResult, $actualResult);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldAllowToAddAdditionalProperties(): void
+    {
+        $commandClass = DummyDeserializableCommand::class;
+        $requestedContent = json_encode([
+            'opts' => ['a' => 1]
+        ]);
+        $additionalProps = [
+            'name' => 'My command'
+        ];
+        $request = new Request([], [], [], [], [], [], $requestedContent);
+        $request->setRequestFormat('json');
+
+        $expectedResult = new DummyDeserializableCommand('My command', ['a' => 1]);
+        $actualResult = $this->extractor->extractFromRequest($request, $commandClass, $additionalProps);
 
         static::assertEquals($expectedResult, $actualResult);
     }

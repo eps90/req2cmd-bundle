@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Eps\Req2CmdBundle\EventListener;
 
 use Eps\Req2CmdBundle\CommandExtractor\CommandExtractorInterface;
+use Eps\Req2CmdBundle\Params\ParamCollector\ParamCollectorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class ExtractCommandFromRequestListener
@@ -11,6 +13,7 @@ class ExtractCommandFromRequestListener
     public const API_RESPONDER_CONTROLLER = 'eps.req2cmd.action.api_responder';
     public const CMD_CLASS_PARAM = '_command_class';
     public const CMD_PARAM = '_command';
+    public const CMD_PROPS_PARAM = '_command_properties';
     private const CONTROLLER_PARAM = '_controller';
 
     /**
@@ -18,9 +21,15 @@ class ExtractCommandFromRequestListener
      */
     private $extractor;
 
-    public function __construct(CommandExtractorInterface $extractor)
+    /**
+     * @var ParamCollectorInterface
+     */
+    private $paramCollector;
+
+    public function __construct(CommandExtractorInterface $extractor, ParamCollectorInterface $paramCollector)
     {
         $this->extractor = $extractor;
+        $this->paramCollector = $paramCollector;
     }
 
     public function onKernelRequest(GetResponseEvent $event): void
@@ -31,7 +40,8 @@ class ExtractCommandFromRequestListener
             return;
         }
 
-        $command = $this->extractor->extractFromRequest($request, $commandClass);
+        $additionalParams = $this->extractAdditionalParams($request);
+        $command = $this->extractor->extractFromRequest($request, $commandClass, $additionalParams);
 
         $request->attributes->set(self::CMD_PARAM, $command);
         $request->attributes->remove(self::CMD_CLASS_PARAM);
@@ -39,5 +49,16 @@ class ExtractCommandFromRequestListener
         if (!$request->attributes->has(self::CONTROLLER_PARAM)) {
             $request->attributes->set(self::CONTROLLER_PARAM, self::API_RESPONDER_CONTROLLER);
         }
+    }
+
+    private function extractAdditionalParams(Request $request): array
+    {
+        $additionalParams = [];
+        if ($request->attributes->has(self::CMD_PROPS_PARAM)) {
+            $additionalProps = $request->attributes->get(self::CMD_PROPS_PARAM);
+            $additionalParams = $this->paramCollector->collect($request, $additionalProps);
+        }
+
+        return $additionalParams;
     }
 }

@@ -5,6 +5,7 @@ namespace Eps\Req2CmdBundle\Tests\EventListener;
 
 use Eps\Req2CmdBundle\CommandExtractor\MockCommandExtractor;
 use Eps\Req2CmdBundle\EventListener\ExtractCommandFromRequestListener;
+use Eps\Req2CmdBundle\Params\ParamCollector\ParamCollectorInterface;
 use Eps\Req2CmdBundle\Tests\Fixtures\Command\DummyCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,12 +24,18 @@ class ExtractCommandFromRequestListenerTest extends TestCase
      */
     private $extractor;
 
+    /**
+     * @var ParamCollectorInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $collector;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->extractor = new MockCommandExtractor();
-        $this->listener = new ExtractCommandFromRequestListener($this->extractor);
+        $this->collector = $this->createMock(ParamCollectorInterface::class);
+        $this->listener = new ExtractCommandFromRequestListener($this->extractor, $this->collector);
     }
 
     /**
@@ -40,6 +47,40 @@ class ExtractCommandFromRequestListenerTest extends TestCase
         $event = $this->createGetResponseEvent($request);
         $deserializedCommand = new DummyCommand('My command', ['a' => 1]);
         $this->extractor->willReturn($deserializedCommand);
+
+        $this->listener->onKernelRequest($event);
+
+        $expectedCommand = $deserializedCommand;
+        $actualCommand = $request->attributes->get(ExtractCommandFromRequestListener::CMD_PARAM);
+
+        static::assertEquals($expectedCommand, $actualCommand);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldCollectAdditionalParamsFromRoute(): void
+    {
+        $additionalParams = [
+            'path' => [
+                'id' => 'article_id'
+            ]
+        ];
+
+        $request = $this->getValidRequest();
+        $request->attributes->set(ExtractCommandFromRequestListener::CMD_PROPS_PARAM, $additionalParams);
+        $event = $this->createGetResponseEvent($request);
+
+        $collectedParams = ['article_id' => 321];
+        $this->collector->expects($this->once())
+            ->method('collect')
+            ->with($request, $additionalParams)
+            ->willReturn($collectedParams);
+
+        $deserializedCommand = new DummyCommand('My name', ['a' => 1]);
+        $this->extractor
+            ->forArguments($request, DummyCommand::class, $collectedParams)
+            ->willReturn($deserializedCommand);
 
         $this->listener->onKernelRequest($event);
 

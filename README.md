@@ -29,7 +29,7 @@ Thanks to Symfony Router component and Symfony Event Dispatcher with kernel even
 I was able to recognize command from route parameters and convert to the command instance.
 
 This bundle **works** but still needs a lot of work to work in each case. 
-I hope that things like custom command bus, customer serializer or event completely framework-agnostic code
+I hope that things like custom command bus or even completely framework-agnostic code
 will be available soon.
 Every contribution is welcome!
 
@@ -188,6 +188,158 @@ req2cmd:
 # ...
 ```
 
+### Attaching path parameters to a command
+
+You can attach route parameters to command deserialization like it was sent from a client.
+Let's say you have a route mapped to a command like the following:
+
+```yaml
+app.update_post_title:
+  path: /posts/{id}.{_format}
+  methods: ['PUT']
+  defaults:
+    _command_class: AppBundle\Command\UpdatePostTitle
+```
+
+And you have that command that looks like that:
+
+```php
+<?php
+
+final class UpdatePostTitle
+{
+    private $postId;
+    private $postTitle;
+    
+    public function __construct(int $postId, string $postTitle) 
+    {
+        $this->postId = $postId;
+        $this->postTitle = $postTitle;
+    }
+    
+    // ...
+}
+```
+
+As you can see, the `UpdatePost` command requires an id and some string 
+that should allow to update a post title.
+
+That command, to be serialized correctly, needs both parameters in request's contents. 
+Of course, you can send following request to send your command to the event bus:
+ 
+```
+PUT http://example.com/api/posts/4234.json
+{
+    "id": 4234,
+    "title": "Updated title"
+}
+
+```
+
+As you can see, the `id` property exists in a path and in a request body.
+To remove this duplication you can point a **route parameter**
+to be included in deserialization:
+
+```yaml
+app.update_post_title:
+  path: /posts/{id}.{_format}
+  defaults:
+    _command_class: AppBundle\Command\UpdatePostTitle
+    _command_properties:
+      path:
+        id: ~
+```
+
+Then, the `id` from route will be passed on, like it's been a part of request body,
+and will create your command properly. Then your request may look like that:
+
+```
+PUT http://example.com/api/posts/4234.json
+{
+    "title": "Updated title"
+}
+
+```
+
+And everything will work as expected.
+
+> By **route parameters** I mean **all route parameters** so if you want to attach,
+for example, a `_format` (yep, I know, a stupid example), you can do it in the same way.
+
+#### Change route parameters names
+
+You may want to change a parameter name before it goes to the extractor.
+Given the example above, the serializer will probably need a `post_id` instead
+of `id` in request content. The name can be changed by passing a value to parameter name
+in route definition:
+
+```yaml
+app.update_post_title:
+  path: /posts/{id}.{_format}
+  defaults:
+    _command_class: AppBundle\Command\UpdatePostTitle
+    _command_properties:
+      path:
+        id: post_id
+```
+
+Then the following code will work:
+
+
+```php
+<?php
+
+use Eps\Req2CmdBundle\Command\DeserializableCommandInterface;
+
+final class UpdatePostTitle implements DeserializableCommandInterface
+{
+    // ...
+    
+    public static function fromArray(array $commandProps): self 
+    {
+        return new self($commandProps['post_id'], $commandProps['title']); 
+    }   
+}
+```
+
+#### Required route parameters
+
+A `PathParamsMapper` can recognize whether configure parameter should be required and not empty.
+To allow it, prepend a parameter name with an exclamation mark:
+ 
+```
+app.update_post_title:
+  path: /posts/{id}.{_format}
+  defaults:
+    _format: ~
+    _command_class: AppBundle\Command\UpdatePostTitle
+    _command_properties:
+      path:
+        !_format: requested_format
+```
+
+In this case, when `_format` parameter will equal `null`, the mapper will throw
+a `ParamMapperException`.
+
+#### Registering custom parameter mappers
+
+The default parameter mapper is the `PathParamsMapper` class instance and it's responsible only for
+extracting only route parameters. Of course you can feel free to register your own mapper,
+by implement the `ParamMapperInterface`.
+
+When you're done, register it as a service and add the `req2cmd.param_mapper` tag.
+Optionally, you can set a priority to make sure that this mapper will be executed earlier.
+The higher priority is, the more important the service is.
+
+```yaml
+services:
+# ...
+  app.param_mapper.my_awesome_mapper:
+    class: AppBundle\ParamMapper\MyAwesomeMapper
+    tags:
+      - { name: 'req2cmd.param_mapper', priority: 128 }
+```
+
 ### But I want to use different extractor!
 
 Sure, why not! 
@@ -242,6 +394,15 @@ req2cmd:
 ### ... and I want other command bus as well!
 
 It'll be available soon as well, stay tuned.
+
+## Exceptions
+
+All exceptions in this bundle implement the `Req2CmdExceptionInterface`.
+Currently, the following exceptions are configured:
+
+* `ParamMapperException`
+    * `::noParamFound` (code **101**) - when required property has not been found in a request
+    * `::paramEmpty` (code **102**) - when required property is found but it's empty
 
 ## Testing and contributing
 

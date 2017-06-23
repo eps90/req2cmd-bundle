@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Eps\Req2CmdBundle\CommandExtractor;
 
+use JMS\Serializer\ArrayTransformerInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,19 +15,37 @@ class JMSSerializerCommandExtractor implements CommandExtractorInterface
     private $jmsSerializer;
 
     /**
+     * @var ArrayTransformerInterface
+     */
+    private $jmsArrayTransformer;
+
+    /**
      * JMSSerializerCommandExtractor constructor.
      * @param SerializerInterface $jmsSerializer
+     * @param ArrayTransformerInterface $jmsArrayTransformer
      */
-    public function __construct(SerializerInterface $jmsSerializer)
+    public function __construct(SerializerInterface $jmsSerializer, ArrayTransformerInterface $jmsArrayTransformer)
     {
         $this->jmsSerializer = $jmsSerializer;
+        $this->jmsArrayTransformer = $jmsArrayTransformer;
     }
 
     /**
      * {@inheritdoc}
+     * @throws \LogicException
      */
-    public function extractFromRequest(Request $request, string $commandClass)
+    public function extractFromRequest(Request $request, string $commandClass, array $additionalProps = [])
     {
+        if (!empty($additionalProps)) {
+            $decodedContent = $this->jmsSerializer->deserialize(
+                $request->getContent(),
+                'array',
+                $request->getRequestFormat()
+            );
+            $finalProps = array_merge($decodedContent, $additionalProps);
+            return $this->jmsArrayTransformer->fromArray($finalProps, $commandClass);
+        }
+
         return $this->jmsSerializer->deserialize($request->getContent(), $commandClass, $request->getRequestFormat());
     }
 }
