@@ -21,6 +21,7 @@ final class Req2CmdConfiguration implements ConfigurationInterface
         $root
             ->children()
                 ->append($this->addExtractorNode())
+                ->append($this->addCommandBusNode())
             ->end();
 
         return $builder;
@@ -46,5 +47,40 @@ final class Req2CmdConfiguration implements ConfigurationInterface
             ->end();
 
         return $root;
+    }
+
+    private function addCommandBusNode(): NodeDefinition
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('command_bus');
+        $node
+            ->addDefaultsIfNotSet()
+            ->beforeNormalization()
+                ->ifString()
+                ->then(function (string $svcId) {
+                    return ['service_id' => 'eps.req2cmd.command_bus.' . $svcId];
+                })
+            ->end()
+            ->children()
+                ->scalarNode('service_id')
+                    ->cannotBeEmpty()
+                    ->defaultValue('eps.req2cmd.command_bus.tactician')
+                ->end()
+                ->scalarNode('name')
+                    ->cannotBeEmpty()
+                    ->defaultValue('default')
+                ->end()
+            ->end()
+            ->validate()
+                ->ifTrue(function ($config) {
+                    return $config['service_id'] !== 'eps.req2cmd.command_bus.tactician';
+                })
+                ->then(function ($config) {
+                    unset($config['name']);
+                    return $config;
+                })
+            ->end();
+
+        return $node;
     }
 }

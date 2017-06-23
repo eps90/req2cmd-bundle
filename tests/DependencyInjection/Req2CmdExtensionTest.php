@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Eps\Req2CmdBundle\Tests\DependencyInjection;
 
 use Eps\Req2CmdBundle\Action\ApiResponderAction;
+use Eps\Req2CmdBundle\CommandBus\TacticianCommandBus;
 use Eps\Req2CmdBundle\CommandExtractor\JMSSerializerCommandExtractor;
 use Eps\Req2CmdBundle\CommandExtractor\SerializerCommandExtractor;
 use Eps\Req2CmdBundle\DependencyInjection\Req2CmdExtension;
@@ -115,6 +116,51 @@ class Req2CmdExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasAlias(
             'eps.req2cmd.param_collector',
             $defaultCollectorId
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldHaveCommandBusesDefinition(): void
+    {
+        $defaultBusId = 'eps.req2cmd.command_bus.tactician';
+        $this->assertContainerBuilderHasService($defaultBusId, TacticianCommandBus::class);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldSetCommandBusFromConfiguration(): void
+    {
+        $config = [
+            'command_bus' => [
+                'service_id' => 'eps.req2cmd.command_bus.broadway'
+            ]
+        ];
+        $this->load($config);
+
+        $this->assertContainerBuilderHasAlias('eps.req2cmd.command_bus', 'eps.req2cmd.command_bus.broadway');
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldBeAbleToChooseOtherCommandBusThanDefault(): void
+    {
+        $config = [
+            'command_bus' => [
+                'service_id' => 'eps.req2cmd.command_bus.tactician',
+                'name' => 'queued'
+            ]
+        ];
+
+        $this->load($config);
+
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(
+            'eps.req2cmd.command_bus.tactician',
+            0,
+            new Reference('tactician.commandbus.queued')
         );
     }
 }

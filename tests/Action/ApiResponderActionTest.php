@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Eps\Req2CmdBundle\Tests\Action;
 
 use Eps\Req2CmdBundle\Action\ApiResponderAction;
-use League\Tactician\CommandBus;
+use Eps\Req2CmdBundle\CommandBus\CommandBusInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +17,7 @@ class ApiResponderActionTest extends TestCase
     private $action;
 
     /**
-     * @var CommandBus|\PHPUnit_Framework_MockObject_MockObject
+     * @var CommandBusInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $commandBus;
 
@@ -25,21 +25,21 @@ class ApiResponderActionTest extends TestCase
     {
         parent::setUp();
 
-        $this->commandBus = $this->createMock(CommandBus::class);
+        $this->commandBus = $this->createMock(CommandBusInterface::class);
         $this->action = new ApiResponderAction($this->commandBus);
     }
 
     /**
      * @test
      */
-    public function itShouldSendACommandToTheEventBus(): void
+    public function itShouldSendACommandToTheCommandBus(): void
     {
         $requestedCommand = new \stdClass();
         $request = new Request();
         $request->attributes->set('_command', $requestedCommand);
 
         $this->commandBus->expects(static::once())
-            ->method('handle')
+            ->method('handleCommand')
             ->with($requestedCommand);
 
         call_user_func($this->action, $request);

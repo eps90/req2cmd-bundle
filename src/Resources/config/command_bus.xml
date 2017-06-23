@@ -5,10 +5,12 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="eps.req2cmd.action.api_responder"
-                 class="Eps\Req2CmdBundle\Action\ApiResponderAction"
+        <service id="eps.req2cmd.command_bus.tactician"
+                 class="Eps\Req2CmdBundle\CommandBus\TacticianCommandBus"
+                 public="false"
                  lazy="true">
-            <argument type="service" id="eps.req2cmd.command_bus" />
+            <argument type="service" id="tactician.commandbus" />
         </service>
+        <service id="eps.req2cmd.command_bus" alias="eps.req2cmd.command_bus.tactician" />
     </services>
 </container>

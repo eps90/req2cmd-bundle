@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 namespace Eps\Req2CmdBundle\Action;
 
-use League\Tactician\CommandBus;
+use Eps\Req2CmdBundle\CommandBus\CommandBusInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiResponderAction
 {
     /**
-     * @var CommandBus
+     * @var CommandBusInterface
      */
     private $commandBus;
 
-    public function __construct(CommandBus $commandBus)
+    public function __construct(CommandBusInterface $commandBus)
     {
         $this->commandBus = $commandBus;
     }
@@ -25,7 +25,7 @@ class ApiResponderAction
         if ($command === null) {
             throw new \InvalidArgumentException('No _command argument found for action');
         }
-        $this->commandBus->handle($command);
+        $this->commandBus->handleCommand($command);
 
         return new Response('', $this->getResponseStatusCode($request));
     }

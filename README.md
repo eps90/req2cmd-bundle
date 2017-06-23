@@ -383,6 +383,7 @@ And adapt project configuration by setting `extractor.service_id` value:
 ```yaml
 # ...
 req2cmd:
+  # ...
    extractor:
       service_id: app.extractor.my_extractor
 # ...
@@ -393,7 +394,56 @@ req2cmd:
 
 ### ... and I want other command bus as well!
 
-It'll be available soon as well, stay tuned.
+You can use whatever command bus you want.
+The only condition is you need to write an adapter implementing `CommandBusInterface`.
+
+Then you can register it as a service and adapt configuration:
+
+```yaml
+# app/config/config.yml
+# ...
+req2cmd:
+  # ...
+  command_bus:
+    service_id: app.command_bus.my_command_bus
+  # ...
+# ...
+```
+
+> **Note:** Tactician is the default command bus so you don't have to configure
+it manually. Actually, the following configuration is equivalent to missing one:
+
+```yaml
+# ...
+req2cmd:
+  # Short version:
+  command_bus: tactician
+  # Verbose version:
+  command_bus:
+    service_id: eps.req2cmd.command_bus.tactician
+    name: default
+# ...
+```
+
+### Configuring command bus
+
+The default command bus is [Tactician command bus](http://tactician.thephpleague.com/)
+which allows you to declare several command buses adapted to your needs.
+Without touching the configuration, this bundle uses `tactician.commandbus.default` command bus
+which is sufficient for most cases. However, if you need to set different command bus name,
+you can do it by passing a _name_ to configuration:
+
+```yaml
+# app/config/config.yml
+# ...
+req2cmd:
+  # ...
+  command_bus:
+    name: 'queued'
+  # ...
+```
+
+In such case the `tactician.commandbus.queued` will be used.
 
 ## Exceptions
 

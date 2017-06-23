@@ -83,4 +83,114 @@ class Req2CmdConfigurationTest extends TestCase
             'extractor'
         );
     }
+
+    /**
+     * @test
+     */
+    public function itShouldSetTacticianAsDefaultCommandBus(): void
+    {
+        $inputConfig = [];
+        $expectedProcessedConfig = [
+            'command_bus' => [
+                'service_id' => 'eps.req2cmd.command_bus.tactician',
+                'name' => 'default'
+            ]
+        ];
+        $this->assertProcessedConfigurationEquals(
+            [$inputConfig],
+            $expectedProcessedConfig,
+            'command_bus'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldBeAbleToSetOtherBuiltInCommandBus(): void
+    {
+        $inputConfig = [
+            'command_bus' => 'broadway'
+        ];
+        $expectedProcessedConfig = [
+            'command_bus' => [
+                'service_id' => 'eps.req2cmd.command_bus.broadway'
+            ]
+        ];
+        $this->assertProcessedConfigurationEquals(
+            [$inputConfig],
+            $expectedProcessedConfig,
+            'command_bus'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldAllowToAddCustomCommandBus(): void
+    {
+        $inputConfig = [
+            'command_bus' => [
+                'service_id' => 'app.command_bus.custom'
+            ]
+        ];
+        $expectedProcessedConfig = [
+            'command_bus' => [
+                'service_id' => 'app.command_bus.custom'
+            ]
+        ];
+
+        $this->assertProcessedConfigurationEquals(
+            [$inputConfig],
+            $expectedProcessedConfig,
+            'command_bus'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldBeAbleToSetTacticianCommandBusType(): void
+    {
+        $inputConfig = [
+            'command_bus' => [
+                'name' => 'queued'
+            ]
+        ];
+        $expectedProcessedConfig = [
+            'command_bus' => [
+                'service_id' => 'eps.req2cmd.command_bus.tactician',
+                'name' => 'queued'
+            ]
+        ];
+
+        $this->assertProcessedConfigurationEquals(
+            [$inputConfig],
+            $expectedProcessedConfig,
+            'command_bus'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldUnsetCommandBusNameWhenItIsNotTactician(): void
+    {
+        $inputConfig = [
+            'command_bus' => [
+                'service_id' => 'my.custom.bus',
+                'name' => 'blablabla'
+            ]
+        ];
+        $expectedProcessedConfig = [
+            'command_bus' => [
+                'service_id' => 'my.custom.bus'
+            ]
+        ];
+
+        $this->assertProcessedConfigurationEquals(
+            [$inputConfig],
+            $expectedProcessedConfig,
+            'command_bus'
+        );
+    }
 }

@@ -29,8 +29,10 @@ final class Req2CmdExtension extends Extension
         $loader->load('extractors.xml');
         $loader->load('listeners.xml');
         $loader->load('param_mappers.xml');
+        $loader->load('command_bus.xml');
 
         $this->configureExtractors($config, $container);
+        $this->configureCommandBus($config, $container);
     }
 
     public function getAlias(): string
@@ -42,5 +44,18 @@ final class Req2CmdExtension extends Extension
     {
         $extractorId = (string)$config['extractor']['service_id'];
         $container->setAlias('eps.req2cmd.extractor', $extractorId);
+    }
+
+    private function configureCommandBus(array $config, ContainerBuilder $container): void
+    {
+        $commandBusId = (string)$config['command_bus']['service_id'];
+        if ($commandBusId === 'eps.req2cmd.command_bus.tactician') {
+            $busName = (string)$config['command_bus']['name'];
+            $tacticianServiceName = 'tactician.commandbus.' . $busName;
+            $busDefinition = $container->findDefinition('eps.req2cmd.command_bus.tactician');
+            $busDefinition->replaceArgument(0, new Reference($tacticianServiceName));
+        }
+
+        $container->setAlias('eps.req2cmd.command_bus', $commandBusId);
     }
 }
