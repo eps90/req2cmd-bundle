@@ -193,4 +193,99 @@ class Req2CmdConfigurationTest extends TestCase
             'command_bus'
         );
     }
+
+    /**
+     * @test
+     */
+    public function itShouldDefineDefaultListenerPriority(): void
+    {
+        $inputConfig = [];
+        $expectedProcessedConfig = [
+            'listeners' => [
+                'extractor' => [
+                    'enabled' => true,
+                    'priority' => 0
+                ]
+            ]
+        ];
+
+        $this->assertProcessedConfigurationEquals(
+            [$inputConfig],
+            $expectedProcessedConfig,
+            'listeners'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldBeAbleToSetListenerPriority(): void
+    {
+        $inputConfig = [
+            'listeners' => [
+                'extractor' => [
+                    'priority' => 128
+                ]
+            ]
+        ];
+        $expectedProcessedConfig = [
+            'listeners' => [
+                'extractor' => [
+                    'enabled' => true,
+                    'priority' => 128
+                ]
+            ]
+        ];
+
+        $this->assertProcessedConfigurationEquals(
+            [$inputConfig],
+            $expectedProcessedConfig,
+            'listeners'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldAllowToDisableAListener(): void
+    {
+        $inputConfig = [
+            'listeners' => [
+                'extractor' => [
+                    'enabled' => false
+                ]
+            ]
+        ];
+
+        $this->assertConfigurationIsValid(
+            [$inputConfig],
+            'listeners'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldAllowToDisableAListenerUsingShorthandMethod(): void
+    {
+        $inputConfig = [
+            'listeners' => [
+                'extractor' => false
+            ]
+        ];
+        $expectedProcessedConfiguration = [
+            'listeners' => [
+                'extractor' => [
+                    'enabled' => false,
+                    'priority' => 0
+                ]
+            ]
+        ];
+
+        $this->assertProcessedConfigurationEquals(
+            [$inputConfig],
+            $expectedProcessedConfiguration,
+            'listeners'
+        );
+    }
 }

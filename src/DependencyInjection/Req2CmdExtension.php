@@ -20,10 +20,7 @@ final class Req2CmdExtension extends Extension
         $configuration = new Req2CmdConfiguration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new XmlFileLoader(
-            $container,
-            new FileLocator(__DIR__ . '/../Resources/config')
-        );
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         $loader->load('actions.xml');
         $loader->load('extractors.xml');
@@ -33,6 +30,7 @@ final class Req2CmdExtension extends Extension
 
         $this->configureExtractors($config, $container);
         $this->configureCommandBus($config, $container);
+        $this->configureEventListeners($config, $container);
     }
 
     public function getAlias(): string
@@ -57,5 +55,29 @@ final class Req2CmdExtension extends Extension
         }
 
         $container->setAlias('eps.req2cmd.command_bus', $commandBusId);
+    }
+
+    private function configureEventListeners(array $config, ContainerBuilder $container): void
+    {
+        $listenersMap = [
+            'extractor' => 'eps.req2cmd.listener.extract_command'
+        ];
+        foreach ((array)$config['listeners'] as $listenerName => $listenerConfig) {
+            $listenerId = $listenersMap[$listenerName];
+            if (!$listenerConfig['enabled']) {
+                $container->removeDefinition($listenerId);
+                continue;
+            }
+            $definition = $container->findDefinition($listenerId);
+            $serviceTags = $definition->getTags();
+            foreach ($serviceTags as $tagName => $tags) {
+                if ($tagName === 'kernel.event_listener') {
+                    foreach ($tags as $tagIdx => $tag) {
+                        $serviceTags[$tagName][$tagIdx]['priority'] = $listenerConfig['priority'];
+                    }
+                }
+            }
+            $definition->setTags($serviceTags);
+        }
     }
 }
