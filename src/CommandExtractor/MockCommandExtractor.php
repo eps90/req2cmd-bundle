@@ -24,7 +24,7 @@ class MockCommandExtractor implements CommandExtractorInterface
      */
     public function extractFromRequest(Request $request, string $commandClass, array $additionalProps = [])
     {
-        $paramsHash = serialize(func_get_args());
+        $paramsHash = serialize([$request, $commandClass, $additionalProps]);
         if (array_key_exists($paramsHash, $this->toReturnForArgs)) {
             return $this->toReturnForArgs[$paramsHash];
         }
@@ -36,9 +36,10 @@ class MockCommandExtractor implements CommandExtractorInterface
     {
         if ($this->lastArgsHash !== null) {
             $this->toReturnForArgs[$this->lastArgsHash] = $command;
-        } else {
-            $this->toReturn = $command;
+            return $this;
         }
+
+        $this->toReturn = $command;
 
         return $this;
     }
@@ -50,7 +51,7 @@ class MockCommandExtractor implements CommandExtractorInterface
 
     public function forArguments(Request $request, string $cmdClass, array $additionalProps = []): self
     {
-        $this->lastArgsHash = serialize(func_get_args());
+        $this->lastArgsHash = serialize([$request, $cmdClass, $additionalProps]);
 
         return $this;
     }

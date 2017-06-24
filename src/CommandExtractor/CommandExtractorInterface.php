@@ -11,7 +11,7 @@ interface CommandExtractorInterface
      * @param Request $request
      * @param string $commandClass
      * @param array $additionalProps
-     * @return object
+     * @return mixed
      */
     public function extractFromRequest(Request $request, string $commandClass, array $additionalProps = []);
 }

@@ -36,7 +36,7 @@ class JMSSerializerCommandExtractorTest extends TestCase
     {
         $commandClass = DummyComplexCommand::class;
         $requestContent = json_encode([
-            'id' => ['id_value' => 312],
+            'dummy_id' => ['id_value' => 312],
             'name' => 'MyName',
             'date' => '2015-01-01 12:00:00'
         ]);
@@ -60,7 +60,7 @@ class JMSSerializerCommandExtractorTest extends TestCase
     {
         $commandClass = DummyComplexCommand::class;
         $requestContent = json_encode([
-            'id' => ['id_value' => 312],
+            'dummy_id' => ['id_value' => 312],
             'date' => '2015-01-01 12:00:00'
         ]);
         $additionalProperties = [

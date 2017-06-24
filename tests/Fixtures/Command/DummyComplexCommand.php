@@ -8,7 +8,7 @@ final class DummyComplexCommand
     /**
      * @var DummyId
      */
-    private $id;
+    private $dummyId;
 
     /**
      * @var string
@@ -22,13 +22,13 @@ final class DummyComplexCommand
 
     /**
      * DummyComplexCommand constructor.
-     * @param DummyId $id
+     * @param DummyId $dummyId
      * @param string $name
      * @param \DateTime $date
      */
-    public function __construct(DummyId $id, string $name, \DateTime $date)
+    public function __construct(DummyId $dummyId, string $name, \DateTime $date)
     {
-        $this->id = $id;
+        $this->dummyId = $dummyId;
         $this->name = $name;
         $this->date = $date;
     }
@@ -36,9 +36,9 @@ final class DummyComplexCommand
     /**
      * @return DummyId
      */
-    public function getId(): DummyId
+    public function getDummyId(): DummyId
     {
-        return $this->id;
+        return $this->dummyId;
     }
 
     /**
