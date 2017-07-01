@@ -10,6 +10,8 @@
                  public="false"
                  lazy="true">
             <argument type="service" id="serializer" />
+            <argument type="service" id="serializer"/>
+            <argument type="service" id="serializer" />
         </service>
 
         <service id="eps.req2cmd.extractor.jms_serializer"
@@ -17,6 +19,7 @@
                  public="false"
                  lazy="true">
             <argument type="service" id="jms_serializer" />
+            <argument type="service" id="jms_serializer.serializer"/>
         </service>
     </services>
 </container>
