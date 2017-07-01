@@ -19,7 +19,7 @@
                  public="false"
                  lazy="true">
             <argument type="service" id="jms_serializer" />
-            <argument type="service" id="jms_serializer.serializer"/>
+            <argument type="service" id="jms_serializer" />
         </service>
     </services>
 </container>

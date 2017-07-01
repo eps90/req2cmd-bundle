@@ -22,270 +22,205 @@ class Req2CmdConfigurationTest extends TestCase
 
     /**
      * @test
+     * @dataProvider extractorsDataProvider
      */
-    public function itShouldSetDefaultExtractorConfig(): void
+    public function itShouldDefineExtractorsConfiguration($inputConfig, $expectedConfig): void
     {
-        $inputConfig = [];
-        $expectedProcessedConfig = [
-            'extractor' => [
-                'service_id' => 'eps.req2cmd.extractor.serializer'
-            ]
-        ];
         $this->assertProcessedConfigurationEquals(
-            [
-                $inputConfig
+            [$inputConfig],
+            $expectedConfig,
+            'extractor'
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider commandBusProvider
+     */
+    public function itShouldDefineCommandBusConfiguration($inputConfig, $expectedConfig): void
+    {
+        $this->assertProcessedConfigurationEquals(
+            [$inputConfig],
+            $expectedConfig,
+            'command_bus'
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider listenersDataProvider
+     */
+    public function itShouldDefineListenersConfiguration($inputConfig, $expectedConfig): void
+    {
+        $this->assertProcessedConfigurationEquals(
+            [$inputConfig],
+            $expectedConfig,
+            'listeners'
+        );
+    }
+
+    public function extractorsDataProvider(): array
+    {
+        return [
+            'default' => [
+                'input' => [],
+                'expected' => [
+                    'extractor' => [
+                        'service_id' => 'eps.req2cmd.extractor.serializer'
+                    ]
+                ]
             ],
-            $expectedProcessedConfig,
-            'extractor'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function itShouldBeAbleToChangeExtractorConfigToBuiltIn(): void
-    {
-        $inputConfig = [
-            'extractor' => 'jms_serializer'
-        ];
-        $expectedProcessedConfig = [
-            'extractor' => [
-                'service_id' => 'eps.req2cmd.extractor.jms_serializer'
-            ]
-        ];
-        $this->assertProcessedConfigurationEquals(
-            [
-                $inputConfig
+            'change_builtin-extractor' => [
+                'input' => [
+                    'extractor' => 'jms_serializer'
+                ],
+                'expected' => [
+                    'extractor' => [
+                        'service_id' => 'eps.req2cmd.extractor.jms_serializer'
+                    ]
+                ]
             ],
-            $expectedProcessedConfig,
-            'extractor'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function itShouldBeAbleToDefineOwnServiceForExtractor(): void
-    {
-        $inputConfig = [
-            'extractor' => [
-                'service_id' => 'app.my_extractor'
-            ]
-        ];
-        $expectedProcessedConfig = [
-            'extractor' => [
-                'service_id' => 'app.my_extractor'
-            ]
-        ];
-        $this->assertProcessedConfigurationEquals(
-            [$inputConfig],
-            $expectedProcessedConfig,
-            'extractor'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function itShouldSetTacticianAsDefaultCommandBus(): void
-    {
-        $inputConfig = [];
-        $expectedProcessedConfig = [
-            'command_bus' => [
-                'service_id' => 'eps.req2cmd.command_bus.tactician',
-                'name' => 'default'
-            ]
-        ];
-        $this->assertProcessedConfigurationEquals(
-            [$inputConfig],
-            $expectedProcessedConfig,
-            'command_bus'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function itShouldBeAbleToSetOtherBuiltInCommandBus(): void
-    {
-        $inputConfig = [
-            'command_bus' => 'broadway'
-        ];
-        $expectedProcessedConfig = [
-            'command_bus' => [
-                'service_id' => 'eps.req2cmd.command_bus.broadway'
-            ]
-        ];
-        $this->assertProcessedConfigurationEquals(
-            [$inputConfig],
-            $expectedProcessedConfig,
-            'command_bus'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function itShouldAllowToAddCustomCommandBus(): void
-    {
-        $inputConfig = [
-            'command_bus' => [
-                'service_id' => 'app.command_bus.custom'
-            ]
-        ];
-        $expectedProcessedConfig = [
-            'command_bus' => [
-                'service_id' => 'app.command_bus.custom'
-            ]
-        ];
-
-        $this->assertProcessedConfigurationEquals(
-            [$inputConfig],
-            $expectedProcessedConfig,
-            'command_bus'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function itShouldBeAbleToSetTacticianCommandBusType(): void
-    {
-        $inputConfig = [
-            'command_bus' => [
-                'name' => 'queued'
-            ]
-        ];
-        $expectedProcessedConfig = [
-            'command_bus' => [
-                'service_id' => 'eps.req2cmd.command_bus.tactician',
-                'name' => 'queued'
-            ]
-        ];
-
-        $this->assertProcessedConfigurationEquals(
-            [$inputConfig],
-            $expectedProcessedConfig,
-            'command_bus'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function itShouldUnsetCommandBusNameWhenItIsNotTactician(): void
-    {
-        $inputConfig = [
-            'command_bus' => [
-                'service_id' => 'my.custom.bus',
-                'name' => 'blablabla'
-            ]
-        ];
-        $expectedProcessedConfig = [
-            'command_bus' => [
-                'service_id' => 'my.custom.bus'
-            ]
-        ];
-
-        $this->assertProcessedConfigurationEquals(
-            [$inputConfig],
-            $expectedProcessedConfig,
-            'command_bus'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function itShouldDefineDefaultListenerPriority(): void
-    {
-        $inputConfig = [];
-        $expectedProcessedConfig = [
-            'listeners' => [
-                'extractor' => [
-                    'enabled' => true,
-                    'priority' => 0
+            'own_extractor' => [
+                'input' => [
+                    'extractor' => [
+                        'service_id' => 'app.my_extractor'
+                    ]
+                ],
+                'expected' => [
+                    'extractor' => [
+                        'service_id' => 'app.my_extractor'
+                    ]
                 ]
             ]
         ];
-
-        $this->assertProcessedConfigurationEquals(
-            [$inputConfig],
-            $expectedProcessedConfig,
-            'listeners'
-        );
     }
 
-    /**
-     * @test
-     */
-    public function itShouldBeAbleToSetListenerPriority(): void
+    public function commandBusProvider(): array
     {
-        $inputConfig = [
-            'listeners' => [
-                'extractor' => [
-                    'priority' => 128
+        return [
+            'default' => [
+                'input' => [],
+                'expected' => [
+                    'command_bus' => [
+                        'service_id' => 'eps.req2cmd.command_bus.tactician',
+                        'name' => 'default'
+                    ]
+                ]
+            ],
+            'change_builtin_bus' => [
+                'input' => [
+                    'command_bus' => 'broadway'
+                ],
+                'expected' => [
+                    'command_bus' => [
+                        'service_id' => 'eps.req2cmd.command_bus.broadway'
+                    ]
+                ]
+            ],
+            'custom_bus' => [
+                'input' => [
+                    'command_bus' => [
+                        'service_id' => 'app.command_bus.custom'
+                    ]
+                ],
+                'expected' => [
+                    'command_bus' => [
+                        'service_id' => 'app.command_bus.custom'
+                    ]
+                ]
+            ],
+            'use_other_tactician_bus_name' => [
+                'input' => [
+                    'command_bus' => [
+                        'name' => 'queued'
+                    ]
+                ],
+                'expected' => [
+                    'command_bus' => [
+                        'service_id' => 'eps.req2cmd.command_bus.tactician',
+                        'name' => 'queued'
+                    ]
+                ]
+            ],
+            'unset_name_if_not_tactician' => [
+                'input' => [
+                    'command_bus' => [
+                        'service_id' => 'my.custom.bus',
+                        'name' => 'blablabla'
+                    ]
+                ],
+                'expected' => [
+                    'command_bus' => [
+                        'service_id' => 'my.custom.bus'
+                    ]
                 ]
             ]
         ];
-        $expectedProcessedConfig = [
-            'listeners' => [
-                'extractor' => [
-                    'enabled' => true,
-                    'priority' => 128
-                ]
-            ]
-        ];
-
-        $this->assertProcessedConfigurationEquals(
-            [$inputConfig],
-            $expectedProcessedConfig,
-            'listeners'
-        );
     }
 
-    /**
-     * @test
-     */
-    public function itShouldAllowToDisableAListener(): void
+    public function listenersDataProvider(): array
     {
-        $inputConfig = [
-            'listeners' => [
-                'extractor' => [
-                    'enabled' => false
+        return [
+            'default' => [
+                'input' => [],
+                'expected' => [
+                    'listeners' => [
+                        'extractor' => [
+                            'enabled' => true,
+                            'priority' => 0
+                        ]
+                    ]
+                ]
+            ],
+            'change_priority' => [
+                'input' => [
+                    'listeners' => [
+                        'extractor' => [
+                            'priority' => 128
+                        ]
+                    ]
+                ],
+                'expected' => [
+                    'listeners' => [
+                        'extractor' => [
+                            'enabled' => true,
+                            'priority' => 128
+                        ]
+                    ]
+                ]
+            ],
+            'disable_listener' => [
+                'input' => [
+                    'listeners' => [
+                        'extractor' => [
+                            'enabled' => false
+                        ]
+                    ]
+                ],
+                'expected' => [
+                    'listeners' => [
+                        'extractor' => [
+                            'enabled' => false,
+                            'priority' => 0
+                        ]
+                    ]
+                ]
+            ],
+            'shorthand_disabling' => [
+                'input' => [
+                    'listeners' => [
+                        'extractor' => false
+                    ]
+                ],
+                'expected' => [
+                    'listeners' => [
+                        'extractor' => [
+                            'enabled' => false,
+                            'priority' => 0
+                        ]
+                    ]
                 ]
             ]
         ];
-
-        $this->assertConfigurationIsValid(
-            [$inputConfig],
-            'listeners'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function itShouldAllowToDisableAListenerUsingShorthandMethod(): void
-    {
-        $inputConfig = [
-            'listeners' => [
-                'extractor' => false
-            ]
-        ];
-        $expectedProcessedConfiguration = [
-            'listeners' => [
-                'extractor' => [
-                    'enabled' => false,
-                    'priority' => 0
-                ]
-            ]
-        ];
-
-        $this->assertProcessedConfigurationEquals(
-            [$inputConfig],
-            $expectedProcessedConfiguration,
-            'listeners'
-        );
     }
 }

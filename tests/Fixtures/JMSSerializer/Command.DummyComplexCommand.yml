@@ -1,6 +1,6 @@
 Eps\Req2CmdBundle\Tests\Fixtures\Command\DummyComplexCommand:
   properties:
-    id:
+    dummyId:
       type: Eps\Req2CmdBundle\Tests\Fixtures\Command\DummyId
     name:
       type: string

@@ -10,6 +10,7 @@
                  public="false"
                  lazy="true">
             <argument type="service" id="eps.req2cmd.extractor" />
+            <argument type="service" id="eps.req2cmd.param_collector" />
             <tag name="kernel.event_listener" method="onKernelRequest" event="kernel.request" />
         </service>
     </services>

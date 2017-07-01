@@ -19,11 +19,6 @@ class JMSSerializerCommandExtractor implements CommandExtractorInterface
      */
     private $jmsArrayTransformer;
 
-    /**
-     * JMSSerializerCommandExtractor constructor.
-     * @param SerializerInterface $jmsSerializer
-     * @param ArrayTransformerInterface $jmsArrayTransformer
-     */
     public function __construct(SerializerInterface $jmsSerializer, ArrayTransformerInterface $jmsArrayTransformer)
     {
         $this->jmsSerializer = $jmsSerializer;

@@ -30,13 +30,13 @@ class ParamMapperPassTest extends AbstractCompilerPassTestCase
         $collectorDefinition->setArguments([[]]);
         $this->setDefinition(ParamMapperPass::COLLECTOR_SVC_ID, $collectorDefinition);
 
-        $firstMapperDefinition = new Definition(ParamMapperInterface::class);
-        $firstMapperDefinition->addTag(ParamMapperPass::MAPPER_TAG);
-        $this->setDefinition('first_mapper', $firstMapperDefinition);
+        $firstMapperDef = new Definition(ParamMapperInterface::class);
+        $firstMapperDef->addTag(ParamMapperPass::MAPPER_TAG);
+        $this->setDefinition('first_mapper', $firstMapperDef);
 
-        $secondMapperDefinition = new Definition(ParamMapperInterface::class);
-        $secondMapperDefinition->addTag(ParamMapperPass::MAPPER_TAG);
-        $this->setDefinition('second_mapper', $secondMapperDefinition);
+        $secondMapperDef = new Definition(ParamMapperInterface::class);
+        $secondMapperDef->addTag(ParamMapperPass::MAPPER_TAG);
+        $this->setDefinition('second_mapper', $secondMapperDef);
 
         $this->compile();
 
@@ -59,13 +59,13 @@ class ParamMapperPassTest extends AbstractCompilerPassTestCase
         $collectorDefinition->setArguments([[]]);
         $this->setDefinition(ParamMapperPass::COLLECTOR_SVC_ID, $collectorDefinition);
 
-        $firstMapperDefinition = new Definition(ParamMapperInterface::class);
-        $firstMapperDefinition->addTag(ParamMapperPass::MAPPER_TAG, ['priority' => 1]);
-        $this->setDefinition('first_mapper', $firstMapperDefinition);
+        $firstMapperDef = new Definition(ParamMapperInterface::class);
+        $firstMapperDef->addTag(ParamMapperPass::MAPPER_TAG, ['priority' => 1]);
+        $this->setDefinition('first_mapper', $firstMapperDef);
 
-        $secondMapperDefinition = new Definition(ParamMapperInterface::class);
-        $secondMapperDefinition->addTag(ParamMapperPass::MAPPER_TAG, ['priority' => 2]);
-        $this->setDefinition('second_mapper', $secondMapperDefinition);
+        $secondMapperDef = new Definition(ParamMapperInterface::class);
+        $secondMapperDef->addTag(ParamMapperPass::MAPPER_TAG, ['priority' => 2]);
+        $this->setDefinition('second_mapper', $secondMapperDef);
 
         $this->compile();
 
