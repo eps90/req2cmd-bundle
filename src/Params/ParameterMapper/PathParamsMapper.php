@@ -19,7 +19,7 @@ class PathParamsMapper implements ParamMapperInterface
         $pathProps = (array)$propsMap['path'];
         $result = [];
         foreach ($pathProps as $paramName => $paramValue) {
-            if ($required = $this->isParamRequired($paramName)) {
+            if ($this->isParamRequired($paramName)) {
                 $paramName = substr($paramName, 1);
                 $this->assertRequiredParamIsPresent($paramName, $request);
             }
