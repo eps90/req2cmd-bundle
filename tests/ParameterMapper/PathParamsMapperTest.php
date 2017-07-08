@@ -68,6 +68,27 @@ class PathParamsMapperTest extends TestCase
     /**
      * @test
      */
+    public function itShouldStringRequiredSymbolFromParamName(): void
+    {
+        $requestParams = [
+            'id' => 321
+        ];
+        $request = new Request([], [], $requestParams);
+        $props = [
+            'path' => [
+                '!id' => null
+            ]
+        ];
+
+        $expectedResult = ['id' => 321];
+        $actualResult = $this->mapper->map($request, $props);
+
+        static::assertEquals($expectedResult, $actualResult);
+    }
+
+    /**
+     * @test
+     */
     public function itShouldReturnAnEmptyArrayWhenPathKeyDoesNotExist(): void
     {
         $requestParams = [
