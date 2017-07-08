@@ -12,11 +12,7 @@ class PathParamsMapper implements ParamMapperInterface
 
     public function map(Request $request, array $propsMap): array
     {
-        if (!array_key_exists('path', $propsMap)) {
-            return [];
-        }
-
-        $pathProps = (array)$propsMap['path'];
+        $pathProps = $propsMap['path'] ?? [];
         $result = [];
         foreach ($pathProps as $paramName => $paramValue) {
             if ($this->isParamRequired($paramName)) {
