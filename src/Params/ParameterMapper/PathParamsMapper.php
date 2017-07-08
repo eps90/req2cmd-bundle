@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PathParamsMapper implements ParamMapperInterface
 {
-    private const REQ_CHAR = '!';
+    private const REQUIRED_PROPERTY_PREFIX = '!';
 
     public function map(Request $request, array $propsMap): array
     {
@@ -18,29 +18,36 @@ class PathParamsMapper implements ParamMapperInterface
 
         $pathProps = (array)$propsMap['path'];
         $result = [];
-        foreach ($pathProps as $propName => $propValue) {
-            $required = false;
-            if (strpos($propName, self::REQ_CHAR) === 0) {
-                $required = true;
-                $propName = ltrim($propName, self::REQ_CHAR);
+        foreach ($pathProps as $paramName => $paramValue) {
+            if ($required = $this->isParamRequired($paramName)) {
+                $paramName = substr($paramName, 1);
+                $this->assertRequiredParamIsPresent($paramName, $request);
             }
 
-            if ($required && $request->attributes->has($propName) && empty($request->attributes->get($propName))) {
-                throw ParamMapperException::paramEmpty($propName);
-            }
-
-            if (!$request->attributes->has($propName)) {
-                if ($required && $request->attributes->get($propName) === null) {
-                    throw ParamMapperException::noParamFound($propName);
-                }
-
+            if (!$request->attributes->has($paramName)) {
                 continue;
             }
 
-            $finalPropName = $propValue ?? $propName;
-            $result[$finalPropName] = $request->attributes->get($propName);
+            $finalPropName = $paramValue ?? $paramName;
+            $result[$finalPropName] = $request->attributes->get($paramName);
         }
 
         return $result;
+    }
+
+    private function isParamRequired(string $paramName): bool
+    {
+        return strpos($paramName, self::REQUIRED_PROPERTY_PREFIX) === 0;
+    }
+
+    private function assertRequiredParamIsPresent(string $paramName, Request $request): void
+    {
+        if (!$request->attributes->has($paramName)) {
+            throw ParamMapperException::noParamFound($paramName);
+        }
+
+        if ($request->attributes->get($paramName) === null) {
+            throw ParamMapperException::paramEmpty($paramName);
+        }
     }
 }
