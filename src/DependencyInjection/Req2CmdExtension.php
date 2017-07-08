@@ -59,30 +59,39 @@ final class Req2CmdExtension extends Extension
 
     private function configureEventListeners(array $config, ContainerBuilder $container): void
     {
-        $listenersMap = [
-            'extractor' => 'eps.req2cmd.listener.extract_command'
-        ];
         foreach ((array)$config['listeners'] as $listenerName => $listenerConfig) {
-            $listenerId = $listenersMap[$listenerName];
+            $listenerId = $this->getListenerSvcIdByAlias($listenerName);
+
             if (!$listenerConfig['enabled']) {
                 $container->removeDefinition($listenerId);
                 continue;
             }
-            $definition = $container->findDefinition($listenerId);
-            $serviceTags = $definition->getTags();
-            foreach ($serviceTags as $tagName => $tags) {
-                if ($tagName === 'kernel.event_listener') {
-                    $newTags = array_map(
-                        function ($tag) use ($listenerConfig) {
-                            $tag['priority'] = $listenerConfig['priority'];
-                            return $tag;
-                        },
-                        $tags
-                    );
-                    $serviceTags[$tagName] = $newTags;
-                }
-            }
-            $definition->setTags($serviceTags);
+
+            $this->configureEventListener($container, $listenerId, $listenerConfig);
         }
+    }
+
+    private function configureEventListener(ContainerBuilder $container, string $listenerId, array $listenerCfg): void
+    {
+        $definition = $container->findDefinition($listenerId);
+        $serviceTags = $definition->getTags();
+
+        array_walk(
+            $serviceTags['kernel.event_listener'],
+            function (&$tag) use ($listenerCfg) {
+                $tag['priority'] = $listenerCfg['priority'];
+            }
+        );
+
+        $definition->setTags($serviceTags);
+    }
+
+    private function getListenerSvcIdByAlias(string $alias): string
+    {
+        $listenersMap = [
+            'extractor' => 'eps.req2cmd.listener.extract_command'
+        ];
+
+        return $listenersMap[$alias];
     }
 }
