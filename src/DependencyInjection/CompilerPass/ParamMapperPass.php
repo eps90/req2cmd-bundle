@@ -26,16 +26,17 @@ final class ParamMapperPass implements CompilerPassInterface
         $queue = new \SplPriorityQueue();
 
         foreach ($mappersDefinitions as $mapperId => $mapperTags) {
-            foreach ($mapperTags as $tagAttributes) {
-                $priority = $tagAttributes['priority'] ?? 0;
-                $queue->insert($mapperId, $priority);
-            }
+            $tagAttributes = $mapperTags[0];
+            $priority = $tagAttributes['priority'] ?? 0;
+            $queue->insert($mapperId, $priority);
         }
 
-        $mappers = [];
-        foreach ($queue as $mapperId) {
-            $mappers[] = new Reference($mapperId);
-        }
+        $mappers = array_map(
+            function ($mapperId) {
+                return new Reference($mapperId);
+            },
+            iterator_to_array($queue, false)
+        );
 
         $collector->replaceArgument(0, $mappers);
     }
