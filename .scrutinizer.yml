@@ -1,0 +1,15 @@
+filter:
+  excluded_paths:
+    - 'tests/*'
+    - 'src/DependencyInjection/Req2CmdConfiguration'
+
+checks:
+  php: true
+
+coding_style:
+  php:
+    spaces:
+      around_operators:
+        assignment: false
+
+build: true
