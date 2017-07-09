@@ -23,6 +23,13 @@ final class ParamMapperPass implements CompilerPassInterface
 
         $collector = $container->findDefinition(self::COLLECTOR_SVC_ID);
         $mappersDefinitions = $container->findTaggedServiceIds(self::MAPPER_TAG);
+        $mappers = $this->collectMappers($mappersDefinitions);
+
+        $collector->replaceArgument(0, $mappers);
+    }
+
+    private function collectMappers(array $mappersDefinitions): array
+    {
         $queue = new \SplPriorityQueue();
 
         foreach ($mappersDefinitions as $mapperId => $mapperTags) {
@@ -31,13 +38,11 @@ final class ParamMapperPass implements CompilerPassInterface
             $queue->insert($mapperId, $priority);
         }
 
-        $mappers = array_map(
+        return array_map(
             function ($mapperId) {
                 return new Reference($mapperId);
             },
             iterator_to_array($queue, false)
         );
-
-        $collector->replaceArgument(0, $mappers);
     }
 }
