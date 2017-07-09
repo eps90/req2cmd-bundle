@@ -3,7 +3,18 @@ php:
   - '7.1'
   - 'nightly'
 
-before_script:
+env:
+  - SYMFONY_VERSION='2.7.*'
+  - SYMFONY_VERSION='2.8.*'
+  - SYMFONY_VERSION='3.1.*'
+  - SYMFONY_VERSION='3.2.*'
+  - SYMFONY_VERSION='3.3.*'
+
+before_install:
+  - echo "Builing with symfony/framework-budle=${SYMFONY_VERSION}"
+  - composer require --dev --no-update symfony/framework-bundle=${SYMFONY_VERSION}
+
+install:
   - composer install --no-progress --optimize-autoloader --prefer-dist
 
 script:
