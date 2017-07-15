@@ -1,6 +1,6 @@
 # Req2Cmd Bundle
 
-Extract command from a HTTP request and send it to the [Tactician command bus](http://tactician.thephpleague.com/).  
+Extract command from a HTTP request and send it to the command bus, like [Tactician](http://tactician.thephpleague.com/). 
 
 [![Latest Stable Version](https://poser.pugx.org/eps90/req2cmd-bundle/v/stable)](https://packagist.org/packages/eps90/req2cmd-bundle)
 [![Latest Unstable Version](https://poser.pugx.org/eps90/req2cmd-bundle/v/unstable)](https://packagist.org/packages/eps90/req2cmd-bundle)
@@ -24,13 +24,15 @@ I've noticed that each controller's action looks the same: create command from r
 send to the command bus and return `Response` from action.
 
 I've created this library to facilitate converting requests to commands
-and automatically sending them to the [Tactician](http://tactician.thephpleague.com/) command bus.
-Thanks to Symfony Router component and Symfony Event Dispatcher with kernel events
-I was able to recognize command from route parameters and convert to the command instance.
+and automatically sending them to the command bus, like [Tactician](http://tactician.thephpleague.com/).
+Thanks to **Symfony Router** component and **Symfony Event Dispatcher** with kernel events listeners
+an application is able to recognize command from route parameters and convert to the command instance, 
+all thanks to this bundle.
 
-This bundle **works** but still needs a lot of work to work in each case. 
-I hope that things like custom command bus or even completely framework-agnostic code
-will be available soon.
+This bundle **works** and is ready to use. However it may need some work to be adaptable to each case. 
+I hope that completely framework-agnostic code will be available soon so you'll be able to use it
+with whatever framework you like. There's still need to separate from Symfony's Request class and use
+PSR7's `RequestInterface` implementations. Support for other command buses is also a nice-to-have.
 Every contribution is welcome!
 
 ## Requirements
