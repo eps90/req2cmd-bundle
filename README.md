@@ -171,6 +171,17 @@ final class AddPost implements DeserializableCommandInterface
 Then your command can seamlessly be deserialized with a `CommandExtractor`.
 Feel free to register your own denormalizer.
 
+If you don't want to use the default denormalizer, you can disable it in the configuration:
+
+```yaml
+# app/config.yml
+# ...
+req2cmd:
+  extractor:
+    use_cmd_denormalizer: false
+# ...
+```
+
 You can also set a `JMSSerializerCommandExtractor` as your extractor and use handy class mappings for deserialization.
 
 ```yaml
