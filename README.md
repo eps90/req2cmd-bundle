@@ -39,7 +39,11 @@ Every contribution is welcome!
 
 * **PHP** 7.1+
 * **Symfony Framework Bundle** (or Symfony Standard Edition) - 2.3+|3.0+
+
+Optionally, depending on usage, you may need:
+
 * **Tactician bundle** 0.4+
+* **Symfony Serializer** (bundled with Symfony Framework bundle)
 
 ## Installation
 
