@@ -208,4 +208,15 @@ class Req2CmdExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderNotHasService('eps.req2cmd.listener.extract_command');
     }
+
+    /**
+     * @test
+     */
+    public function itShouldHaveListenerDefinition(): void
+    {
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(
+            'eps.req2cmd.normalizer.deserializable_command_denormalizer',
+            'serializer.normalizer'
+        );
+    }
 }

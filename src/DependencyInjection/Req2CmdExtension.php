@@ -27,6 +27,7 @@ final class Req2CmdExtension extends Extension
         $loader->load('listeners.xml');
         $loader->load('param_mappers.xml');
         $loader->load('command_bus.xml');
+        $loader->load('serializer.xml');
 
         $this->configureExtractors($config, $container);
         $this->configureCommandBus($config, $container);
