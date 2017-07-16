@@ -66,7 +66,8 @@ class Req2CmdConfigurationTest extends TestCase
                 'input' => [],
                 'expected' => [
                     'extractor' => [
-                        'service_id' => 'eps.req2cmd.extractor.serializer'
+                        'service_id' => 'eps.req2cmd.extractor.serializer',
+                        'use_cmd_denormalizer' => true
                     ]
                 ]
             ],
@@ -76,7 +77,8 @@ class Req2CmdConfigurationTest extends TestCase
                 ],
                 'expected' => [
                     'extractor' => [
-                        'service_id' => 'eps.req2cmd.extractor.jms_serializer'
+                        'service_id' => 'eps.req2cmd.extractor.jms_serializer',
+                        'use_cmd_denormalizer' => true
                     ]
                 ]
             ],
@@ -88,7 +90,21 @@ class Req2CmdConfigurationTest extends TestCase
                 ],
                 'expected' => [
                     'extractor' => [
-                        'service_id' => 'app.my_extractor'
+                        'service_id' => 'app.my_extractor',
+                        'use_cmd_denormalizer' => true
+                    ]
+                ]
+            ],
+            'manually_disable_serializer' => [
+                'input' => [
+                    'extractor' => [
+                        'use_cmd_denormalizer' => false
+                    ],
+                ],
+                'expected' => [
+                    'extractor' => [
+                        'service_id' => 'eps.req2cmd.extractor.serializer',
+                        'use_cmd_denormalizer' => false
                     ]
                 ]
             ]
