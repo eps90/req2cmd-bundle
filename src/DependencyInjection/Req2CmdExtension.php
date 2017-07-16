@@ -43,6 +43,10 @@ final class Req2CmdExtension extends Extension
     {
         $extractorId = (string)$config['extractor']['service_id'];
         $container->setAlias('eps.req2cmd.extractor', $extractorId);
+
+        if (!$config['extractor']['use_cmd_denormalizer']) {
+            $container->removeDefinition('eps.req2cmd.normalizer.deserializable_command_denormalizer');
+        }
     }
 
     private function configureCommandBus(array $config, ContainerBuilder $container): void

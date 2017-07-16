@@ -45,6 +45,10 @@ final class Req2CmdConfiguration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue('eps.req2cmd.extractor.serializer')
                 ->end()
+                ->scalarNode('use_cmd_denormalizer')
+                    ->cannotBeEmpty()
+                    ->defaultTrue()
+                ->end()
             ->end();
 
         return $root;

@@ -11,6 +11,7 @@ use Eps\Req2CmdBundle\DependencyInjection\Req2CmdExtension;
 use Eps\Req2CmdBundle\EventListener\ExtractCommandFromRequestListener;
 use Eps\Req2CmdBundle\Params\ParamCollector\ParamCollector;
 use Eps\Req2CmdBundle\Params\ParameterMapper\PathParamsMapper;
+use Eps\Req2CmdBundle\Serializer\DeserializableCommandDenormalizer;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -212,11 +213,28 @@ class Req2CmdExtensionTest extends AbstractExtensionTestCase
     /**
      * @test
      */
-    public function itShouldHaveListenerDefinition(): void
+    public function itShouldHaveADenormalizerDefinition(): void
     {
+        $denormalizerId = 'eps.req2cmd.normalizer.deserializable_command_denormalizer';
+        $this->assertContainerBuilderHasService($denormalizerId, DeserializableCommandDenormalizer::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(
-            'eps.req2cmd.normalizer.deserializable_command_denormalizer',
+            $denormalizerId,
             'serializer.normalizer'
         );
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldNotHaveDenormalizerDefinitionIfItIsDisabled(): void
+    {
+        $config = [
+            'extractor' => [
+                'use_cmd_denormalizer' => false
+            ]
+        ];
+        $this->load($config);
+
+        $this->assertContainerBuilderNotHasService('eps.req2cmd.normalizer.deserializable_command_denormalizer');
     }
 }
