@@ -8,7 +8,9 @@
         <service id="eps.req2cmd.param_mapper.path"
                  class="Eps\Req2CmdBundle\Params\ParameterMapper\PathParamsMapper"
                  public="false"
-                 lazy="true" />
+                 lazy="true">
+            <tag name="req2cmd.param_mapper" priority="255" />
+        </service>
 
         <service id="eps.req2cmd.collector.param_collector"
                  class="Eps\Req2CmdBundle\Params\ParamCollector\ParamCollector"

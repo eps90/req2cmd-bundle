@@ -103,6 +103,11 @@ class Req2CmdExtensionTest extends AbstractExtensionTestCase
             'eps.req2cmd.param_mapper.path',
             PathParamsMapper::class
         );
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(
+            'eps.req2cmd.param_mapper.path',
+            'req2cmd.param_mapper',
+            ['priority' => 255]
+        );
     }
 
     /**
