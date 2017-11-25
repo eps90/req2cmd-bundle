@@ -26,11 +26,16 @@ final class DummyComplexCommand
      * @param string $name
      * @param \DateTime $date
      */
-    public function __construct(DummyId $dummyId, string $name, \DateTime $date)
+    public function __construct(?DummyId $dummyId, ?string $name, ?\DateTime $date)
     {
         $this->dummyId = $dummyId;
         $this->name = $name;
         $this->date = $date;
+    }
+
+    public static function withEmptyValues(): self
+    {
+        return new self(null, null, null);
     }
 
     /**

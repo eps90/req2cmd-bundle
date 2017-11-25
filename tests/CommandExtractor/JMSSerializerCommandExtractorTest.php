@@ -78,4 +78,41 @@ class JMSSerializerCommandExtractorTest extends TestCase
 
         static::assertEquals($expectedCommand, $actualCommand);
     }
+
+    /**
+     * @test
+     */
+    public function itShouldOmitRequestBodyIfItsEmpty(): void
+    {
+        $commandClass = DummyComplexCommand::class;
+        $request = new Request();
+        $request->setRequestFormat('json');
+
+        $expectedCommand = DummyComplexCommand::withEmptyValues();
+        $actualCommand = $this->extractor->extractFromRequest($request, $commandClass);
+
+        static::assertEquals($expectedCommand, $actualCommand);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldDeserializeEmptyValuesWhenRequestBodyIsEmpty(): void
+    {
+        $commandClass = DummyComplexCommand::class;
+        $additionalProperties = [
+            'name' => 'MyName'
+        ];
+        $request = new Request();
+        $request->setRequestFormat('json');
+
+        $expectedCommand = new DummyComplexCommand(
+            null,
+            'MyName',
+            null
+        );
+        $actualCommand = $this->extractor->extractFromRequest($request, $commandClass, $additionalProperties);
+
+        static::assertEquals($expectedCommand, $actualCommand);
+    }
 }

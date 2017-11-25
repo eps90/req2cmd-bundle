@@ -31,16 +31,17 @@ class JMSSerializerCommandExtractor implements CommandExtractorInterface
      */
     public function extractFromRequest(Request $request, string $commandClass, array $additionalProps = [])
     {
-        if (!empty($additionalProps)) {
-            $decodedContent = $this->jmsSerializer->deserialize(
-                $request->getContent(),
-                'array',
-                $request->getRequestFormat()
-            );
-            $finalProps = array_merge($decodedContent, $additionalProps);
-            return $this->jmsArrayTransformer->fromArray($finalProps, $commandClass);
+        if (empty($request->getContent())) {
+            return $this->jmsArrayTransformer->fromArray($additionalProps, $commandClass);
         }
 
-        return $this->jmsSerializer->deserialize($request->getContent(), $commandClass, $request->getRequestFormat());
+        $decodedContent = $this->jmsSerializer->deserialize(
+            $request->getContent(),
+            'array',
+            $request->getRequestFormat()
+        );
+        $finalProps = array_merge($decodedContent, $additionalProps);
+
+        return $this->jmsArrayTransformer->fromArray($finalProps, $commandClass);
     }
 }
