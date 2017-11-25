@@ -72,4 +72,37 @@ class SerializerCommandExtractorTest extends TestCase
 
         static::assertEquals($expectedResult, $actualResult);
     }
+
+    /**
+     * @test
+     */
+    public function itShouldOutputAnEmptyArrayIfBodyIsEmpty(): void
+    {
+        $commandClass = DummyDeserializableCommand::class;
+        $request = new Request();
+        $request->setRequestFormat('json');
+
+        $expectedResult = new DummyDeserializableCommand('', []);
+        $actualResult = $this->extractor->extractFromRequest($request, $commandClass);
+
+        static::assertEquals($expectedResult, $actualResult);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldUseOnlyAdditionalPropsWhenBodyIsEmpty(): void
+    {
+        $commandClass = DummyDeserializableCommand::class;
+        $additionalProps = [
+            'name' => 'My command'
+        ];
+        $request = new Request();
+        $request->setRequestFormat('json');
+
+        $expectedResult = new DummyDeserializableCommand('My command', []);
+        $actualResult = $this->extractor->extractFromRequest($request, $commandClass, $additionalProps);
+
+        static::assertEquals($expectedResult, $actualResult);
+    }
 }

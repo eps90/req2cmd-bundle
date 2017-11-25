@@ -48,12 +48,16 @@ class SerializerCommandExtractor implements CommandExtractorInterface
      */
     public function extractFromRequest(Request $request, string $commandClass, array $additionalProps = [])
     {
-        if (!empty($additionalProps)) {
-            $decodedContent = $this->decoder->decode($request->getContent(), $request->getRequestFormat());
-            $finalProps = array_merge($decodedContent, $additionalProps);
-            return $this->denormalizer->denormalize($finalProps, $commandClass, $request->getRequestFormat());
+        $requestContent = $request->getContent();
+        $requestFormat = $request->getRequestFormat();
+
+        if (empty($requestContent)) {
+            return $this->denormalizer->denormalize($additionalProps, $commandClass, $requestFormat);
         }
 
-        return $this->serializer->deserialize($request->getContent(), $commandClass, $request->getRequestFormat());
+        $decodedContent = $this->decoder->decode($requestContent, $requestFormat);
+        $finalProps = array_merge($decodedContent, $additionalProps);
+
+        return $this->denormalizer->denormalize($finalProps, $commandClass, $requestFormat);
     }
 }

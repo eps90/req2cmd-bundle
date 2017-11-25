@@ -41,6 +41,9 @@ final class DummyDeserializableCommand implements DeserializableCommandInterface
 
     public static function fromArray(array $commandProps): self
     {
-        return new self($commandProps['name'], $commandProps['opts']);
+        return new self(
+            $commandProps['name'] ?? '',
+            $commandProps['opts'] ?? []
+        );
     }
 }
