@@ -9,6 +9,7 @@ env:
   - SYMFONY_VERSION='3.1.*'
   - SYMFONY_VERSION='3.2.*'
   - SYMFONY_VERSION='3.3.*'
+  - SYMFONY_VERSION='4.0.*'
 
 before_install:
   - echo "Builing with symfony/framework-budle=${SYMFONY_VERSION}"
