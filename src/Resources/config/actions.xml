@@ -9,6 +9,7 @@
                  class="Eps\Req2CmdBundle\Action\ApiResponderAction"
                  lazy="true">
             <argument type="service" id="eps.req2cmd.command_bus" />
+            <tag name="controller.service_arguments" />
         </service>
     </services>
 </container>
